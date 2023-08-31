@@ -66,6 +66,12 @@ i64 Str_capacity(Str str)
     return str.size - str.len - 1;
 }
 
+void Str_set_len(Str * str, i64 len)
+{
+    str->len = len;
+    str->bytes[len] = '\0';
+}
+
 byte * Str_get(Str str, i64 idx)
 {
     return str.bytes + idx;
@@ -93,6 +99,11 @@ static inline void _resize(Str * str, i64 extra_len)
     new_size = math_next_pow2(str->len + extra_len + 1);
     mem_extend_to_size0((void **) & str->bytes, str->size, new_size);
     str->size = new_size;
+}
+
+void Str_reserve(Str * str, i64 capacity)
+{
+    if (Str_capacity(* str) < capacity) _resize(str, capacity);
 }
 
 void Str_append_cstr_len(Str * str, const byte * cstr, i64 len)

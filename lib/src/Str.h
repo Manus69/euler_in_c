@@ -26,6 +26,8 @@ Str     Str_repeat_cstr(const char * cstr, i64 n_times);
 Str     Str_replace_cstr_len(Slc slc, const byte * from, i64 from_len, const byte * to, i64 to_len);
 Str     Str_replace_cstr(Slc slc, const byte * from, const byte * to);
 void    Str_replace(Str * str, const byte * from, const byte * to);
+void    Str_set_len(Str * str, i64 len);
+void    Str_reserve(Str * str, i64 capacity);
 i64     Str_len(Str str);
 i64     Str_size(Str str);
 i64     Str_capacity(Str str);
