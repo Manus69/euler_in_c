@@ -2,20 +2,17 @@
 
 #include <stdio.h>
 
+#define _FILE "txt.txt"
+
 //word trim
 
 int main()
 {
-    Vec v = Vec_new(i64);
-    i64 n = 1 << 25;
-    Vec_reserve(& v, n);
-    for (i64 k = 0; k < n; k ++)
-    {
-        Vec_push(& v, n - k, i64);
-    }
-
-    // dbg_Vec(& v, (F) dbg_i64);
-    n = deref(i64) Vec_last(v);
-    dbg_i64(& n);
+    Str s = io_read_file(_FILE);
+    Vec v = Slc_split(Str_to_Slc(s), '\n');
+    // dbg_Vec(& v, (F) dbg_Slc_n);
+    Slc slc = deref(Slc) Vec_last(v);
+    dbg_Slc_n(& slc);
+    Str_del(& s);
     Vec_del(& v);
 }

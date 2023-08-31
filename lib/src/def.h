@@ -5,9 +5,17 @@
 
 #define NO_IDX          (-1)
 
+
+typedef enum STATUS     STATUS;
 typedef int_fast64_t    i64;
 typedef uint_fast64_t   u64;
 typedef char            byte;
 typedef void            (* F)(void *);
+
+enum STATUS
+{
+    STATUS_OK,
+    STATUS_NOT_OK,
+};
 
 #endif

@@ -8,5 +8,6 @@
 #include "./src/Vec.h"
 #include "./src/View.h"
 #include "./src/dbg.h"
+#include "./src/io.h"
 
 #endif

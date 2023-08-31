@@ -2,6 +2,18 @@
 #include "Slc.h"
 #include "cstr.h"
 
+#include <string.h>
+
+Slc Slc_from_cstr_len(byte * cstr, i64 len)
+{
+    return Slc_init(cstr, len);
+}
+
+Slc Slc_from_cstr(byte * cstr)
+{
+    return Slc_from_cstr_len(cstr, strlen(cstr));
+}
+
 i64 Slc_find_byte(Slc slc, byte x)
 {
     return cstr_findc_len(slc.ptr, slc.size, x);
@@ -23,4 +35,19 @@ Slc Slc_chop_next(Slc * slc, byte x)
     Slc_shift(slc, 1);
 
     return chop;
+}
+
+Vec Slc_split(Slc slc, byte x)
+{
+    Slc current;
+    Vec vec;
+
+    vec = Vec_new(Slc);
+    while (Slc_empty(slc) == false)
+    {
+        current = Slc_chop_next(& slc, x);
+        Vec_push(& vec, current, Slc);
+    }
+
+    return vec;
 }

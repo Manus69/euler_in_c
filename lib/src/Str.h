@@ -3,6 +3,7 @@
 
 #include "def.h"
 #include "Slc.h"
+#include "Vec.h"
 
 #define Str_vjoin(...) Str_join_cstr((const byte * []){__VA_ARGS__, NULL})
 
@@ -43,6 +44,8 @@ void    Str_del(Str * str);
 i64     Slc_find_byte(Slc slc, byte x);
 i64     Slc_find_cstr_len(Slc slc, const byte * cstr, i64 len);
 Slc     Slc_chop_next(Slc * slc, byte x);
-
+Slc     Slc_from_cstr_len(byte * cstr, i64 len);
+Slc     Slc_from_cstr(byte * cstr);
+Vec     Slc_split(Slc slc, byte x);
 
 #endif
