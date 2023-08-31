@@ -2,17 +2,25 @@
 
 #include <stdio.h>
 
-#define _FILE "txt.txt"
+#define TXT_FILE    "txt.txt"
+#define TEST_FILE   "./lib/src/sort_test.c"
+
+i64 i64_cmp(const i64 * lhs, const i64 * rhs)
+{
+    return * lhs - * rhs;
+}
 
 //word trim
+//header gen
+//code align
 
 int main()
 {
-    Str s = io_read_file(_FILE);
-    Vec v = Slc_split(Str_to_Slc(s), '\n');
-    // dbg_Vec(& v, (F) dbg_Slc_n);
-    Slc slc = deref(Slc) Vec_last(v);
-    dbg_Slc_n(& slc);
+    Str s = io_read_file(TEST_FILE);
+    dbg_Str_n(& s);
+
+    Str_replace_list(& s, (const byte * []) to_list0("TYPE", "Slc"));
+    dbg_Str_n(& s);
+
     Str_del(& s);
-    Vec_del(& v);
 }

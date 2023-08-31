@@ -33,10 +33,14 @@ Str io_read_fd(int fd)
 Str io_read_file(const byte * name)
 {
     int fd;
+    Str str;
 
     if ((fd = open(name, O_RDONLY)) < 0) return Str_new();
 
-    return io_read_fd(fd);
+    str = io_read_fd(fd);
+    close(fd);
+
+    return str;
 }
 
 int io_file_new(const byte * name, int perms)

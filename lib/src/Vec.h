@@ -3,6 +3,7 @@
 
 #include "def.h"
 #include "macro.h"
+#include "View.h"
 
 #define Vec_new(type) Vec_new_item_size(sizeof(type))
 
@@ -33,6 +34,8 @@ void    Vec_extend(Vec * vec, i64 len);
 void    Vec_double_capacity(Vec * vec);
 void    Vec_reserve(Vec * vec, i64 len);
 void    Vec_push_many(Vec * vec, const void * src, i64 len);
+View    Vec_view(Vec vec, i64 idx, i64 len);
+View    Vec_to_View(Vec vec);
 
 #define Vec_set(vec, idx, item, type) (deref(type) Vec_get(vec, idx) = item)
 #define Vec_push(vec_ptr, item, type) \

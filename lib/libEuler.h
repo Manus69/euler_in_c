@@ -9,5 +9,6 @@
 #include "./src/View.h"
 #include "./src/dbg.h"
 #include "./src/io.h"
+#include "./src/sort.h"
 
 #endif

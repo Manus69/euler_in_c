@@ -104,3 +104,13 @@ void Vec_push_many(Vec * vec, const void * src, i64 len)
     memcpy(Vec_get(* vec, vec->idx), src, len * vec->item_size);
     vec->idx += len;
 }
+
+View Vec_view(Vec vec, i64 idx, i64 len)
+{
+    return View_init(Vec_get(vec, idx), vec.item_size, len);
+}
+
+View Vec_to_View(Vec vec)
+{
+    return Vec_view(vec, 0, vec.idx);
+}

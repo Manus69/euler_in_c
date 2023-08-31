@@ -4,6 +4,11 @@
 
 #include <string.h>
 
+i64 Slc_cmp(const Slc * lhs, const Slc * rhs)
+{
+    return cstr_cmp_len(lhs->ptr, lhs->size, rhs->ptr, rhs->size);
+}
+
 Slc Slc_from_cstr_len(byte * cstr, i64 len)
 {
     return Slc_init(cstr, len);

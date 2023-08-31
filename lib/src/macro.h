@@ -5,5 +5,6 @@
 #define unlikely(x)     __builtin_expect((x), 0)
 #define deref(type)     * (type *)
 #define to0(x, type)    deref(type) x = (type) {0}  
+#define to_list0(...)   {__VA_ARGS__, 0}
 
 #endif

@@ -11,6 +11,8 @@ typedef int_fast64_t    i64;
 typedef uint_fast64_t   u64;
 typedef char            byte;
 typedef void            (* F)(void *);
+typedef i64             (* Cmp)(const void *, const void *);
+typedef byte *          cstr_pair[2];
 
 enum STATUS
 {

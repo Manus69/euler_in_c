@@ -201,3 +201,15 @@ void Str_replace(Str * str, const byte * from, const byte * to)
     Str_del(str);
     * str = new;
 }
+
+void Str_replace_list(Str * str, const byte * list[])
+{
+    const byte * from;
+    const byte * to;
+
+    while ((from = * list ++))
+    {
+        to = * list ++;
+        Str_replace(str, from, to);
+    }
+}
