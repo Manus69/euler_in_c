@@ -114,3 +114,8 @@ View Vec_to_View(Vec vec)
 {
     return Vec_view(vec, 0, vec.idx);
 }
+
+void Vec_map(Vec vec, F f)
+{
+    View_map(Vec_to_View(vec), f);
+}

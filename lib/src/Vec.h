@@ -36,6 +36,7 @@ void    Vec_reserve(Vec * vec, i64 len);
 void    Vec_push_many(Vec * vec, const void * src, i64 len);
 View    Vec_view(Vec vec, i64 idx, i64 len);
 View    Vec_to_View(Vec vec);
+void    Vec_map(Vec vec, F f);
 
 #define Vec_set(vec, idx, item, type) (deref(type) Vec_get(vec, idx) = item)
 #define Vec_push(vec_ptr, item, type) \

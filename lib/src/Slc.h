@@ -24,4 +24,6 @@ void *  Slc_get(Slc slc, i64 idx);
 void    Slc_shift(Slc * slc, i64 size);
 bool    Slc_empty(Slc slc);
 
+Putf_gen(Slc)
+
 #endif

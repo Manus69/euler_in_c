@@ -49,5 +49,8 @@ Slc     Slc_chop_next(Slc * slc, byte x);
 Slc     Slc_from_cstr_len(byte * cstr, i64 len);
 Slc     Slc_from_cstr(byte * cstr);
 Vec     Slc_split(Slc slc, byte x);
+Vec     Str_split_to_slices(Str str, byte x);
+Vec     Str_split_to_strings(Str str, byte x);
+
 
 #endif

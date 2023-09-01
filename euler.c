@@ -10,17 +10,28 @@ i64 i64_cmp(const i64 * lhs, const i64 * rhs)
     return * lhs - * rhs;
 }
 
+Putf_gen(i64)
+Swapf_gen(i64)
+
 //word trim
 //header gen
 //code align
+//regex
 
 int main()
 {
-    Str s = io_read_file(TEST_FILE);
-    dbg_Str_n(& s);
+    i64 n = 1 << 25;
+    Vec v = Vec_new(i64);
 
-    Str_replace_list(& s, (const byte * []) to_list0("TYPE", "Slc"));
-    dbg_Str_n(& s);
+    for (i64 k = 0; k < n; k ++)
+    {
+        Vec_push(& v, n - k, i64);
+    }
 
-    Str_del(& s);
+    sort_quick(Vec_to_View(v), i64);
+    // dbg_Vec(& v, (F) dbg_i64);
+    n = deref(i64) Vec_last(v);
+    dbg_i64(& n);
+    
+    Vec_del(& v);
 }

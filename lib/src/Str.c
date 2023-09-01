@@ -213,3 +213,26 @@ void Str_replace_list(Str * str, const byte * list[])
         Str_replace(str, from, to);
     }
 }
+
+Vec Str_split_to_slices(Str str, byte x)
+{
+    return Slc_split(Str_to_Slc(str), x);
+}
+
+Vec Str_split_to_strings(Str str, byte x)
+{
+    Slc slc;
+    Slc current;
+    Vec vec;
+
+    vec = Vec_new(Str);
+    slc = Str_to_Slc(str);
+    
+    while (Slc_empty(slc) == false)
+    {
+        current = Slc_chop_next(& slc, x);
+        Vec_push(& vec, Str_from_Slc(current), Str);
+    }
+
+    return vec;
+}

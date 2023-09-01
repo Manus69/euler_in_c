@@ -3,6 +3,9 @@
 
 #include "def.h"
 
-bool byte_is_numeric(const byte x);
+bool byte_is_numeric(byte x);
+bool byte_is_lower(byte x);
+bool byte_is_upper(byte x);
+bool byte_is_alpha(byte x);
 
 #endif
