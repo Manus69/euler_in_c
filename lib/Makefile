@@ -1,7 +1,7 @@
 cc := gcc
 flags_base := -std=c2x -Wall -Wextra
 flags_dbg := $(flags_base) -g -fsanitize=address -fsanitize=undefined
-flags_release := $(flags_base) -Ofast -flto -D NDEBUG
+flags_release := $(flags_base) -Ofast -flto -D NDEBUG -pg
 target := libEuler.a
 header := libEuler.h
 
@@ -31,3 +31,5 @@ $(target): $(obj)
 
 release: flags := $(flags_release)
 release: rm_obj rm_lib $(target)
+
+re: rm_obj rm_lib all

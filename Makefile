@@ -1,7 +1,7 @@
 cc = gcc
 falgs_base := -std=c2x -Wall -Wextra 
 flags_dbg := $(falgs_base) -g -fsanitize=address -fsanitize=undefined
-flags_release := $(falgs_base) -Ofast -flto
+flags_release := $(falgs_base) -Ofast -flto -pg
 
 target := _euler
 lib_dir := ./lib
@@ -26,6 +26,9 @@ $(lib) : lib_dbg
 lib_dbg :
 	make -C $(lib_dir)
 
+lib_re :
+	make re -C $(lib_dir)
+
 lib_release :
 	make release -C $(lib_dir)
 
@@ -38,7 +41,7 @@ release : flags := $(flags_release)
 release : lib_release
 release : re_obj $(target)
 
-re : lib_dbg re_obj $(target)
+re : lib_re re_obj $(target)
 
 $(obj_dir)/%.o : $(src_dir)/%.c
 	$(cc) $(flags) $(flags_i) -c $< -o $@

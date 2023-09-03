@@ -3,3 +3,4 @@ _*
 *.a
 *.txt
 .vscode
+*.out

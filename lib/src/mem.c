@@ -14,32 +14,27 @@ void * mem_alloc0(i64 size)
     return ptr;
 }
 
+void * mem_dup(const void * ptr, i64 size)
+{
+    return memcpy(mem_alloc0(size), ptr, size);
+}
+
 void mem_del(void * ptr)
 {
     free(ptr);
 }
 
-void mem_extend_to_size(void ** ptr, i64 size, i64 new_size)
+i64 mem_resize(void ** ptr, i64 size)
 {
-    (void) size;
-    * ptr = realloc(* ptr, new_size);
+    * ptr = realloc(* ptr, size);
     assert(* ptr);
+
+    return size;
 }
 
-void mem_extend(void ** ptr, i64 size, i64 extra_size)
+i64 mem_extend(void ** ptr, i64 size, i64 extra_size)
 {
-    mem_extend_to_size(ptr, size, size + extra_size);
-}
-
-void mem_extend0(void ** ptr, i64 size, i64 extra_size)
-{
-    mem_extend(ptr, size, extra_size);
-    memset(* ptr + size, 0, extra_size);
-}
-
-void mem_extend_to_size0(void ** ptr, i64 size, i64 new_size)
-{
-    mem_extend0(ptr, size, new_size - size);
+    return mem_resize(ptr, size + extra_size);
 }
 
 void mem_arr_map(void (* f)(void *), void * arr[])
@@ -57,9 +52,4 @@ void mem_raw_map(void (* f)(void *), void * data, i64 size, i64 step)
         data += step;
         size -= step;
     }
-}
-
-void * mem_dup(const void * ptr, i64 size)
-{
-    return memcpy(mem_alloc0(size), ptr, size);
 }

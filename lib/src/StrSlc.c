@@ -1,58 +1,131 @@
 #include "Str.h"
-#include "Slc.h"
 #include "cstr.h"
-
 #include <string.h>
+#include <stdio.h>
 
-i64 Slc_cmp(const Slc * lhs, const Slc * rhs)
+i64 StrSlc_cmp(StrSlc lhs, StrSlc rhs)
 {
-    return cstr_cmp_len(lhs->ptr, lhs->size, rhs->ptr, rhs->size);
+    return cstr_cmp_len(lhs.cstr, lhs.len, rhs.cstr, rhs.len);
 }
 
-Slc Slc_from_cstr_len(byte * cstr, i64 len)
+i64 StrSlc_cmpf(const void * lhs, const void * rhs)
 {
-    return Slc_init(cstr, len);
+    return StrSlc_cmp(deref(StrSlc) lhs, deref(StrSlc) rhs);
 }
 
-Slc Slc_from_cstr(byte * cstr)
+StrSlc StrSlc_from_cstr_len(const byte * cstr, i64 len)
 {
-    return Slc_from_cstr_len(cstr, strlen(cstr));
+    return (StrSlc)
+    {
+        .cstr = cstr,
+        .len = len,
+    };
 }
 
-i64 Slc_find_byte(Slc slc, byte x)
+StrSlc StrSlc_from_cstr(const byte * cstr)
 {
-    return cstr_findc_len(slc.ptr, slc.size, x);
+    return StrSlc_from_cstr_len(cstr, strlen(cstr));
 }
 
-i64 Slc_find_cstr_len(Slc slc, const byte * cstr, i64 len)
+const char * StrSlc_get(StrSlc slc, i64 idx)
 {
-    return cstr_find_cstr_len(slc.ptr, slc.size, cstr, len);
+    return slc.cstr + idx;
 }
 
-Slc Slc_chop_next(Slc * slc, byte x)
+const char * StrSlc_first(StrSlc slc)
 {
-    i64 idx;
-    Slc chop;
+    return slc.cstr;
+}
 
-    if ((idx = Slc_find_byte(* slc, x)) == NO_IDX) return Slc_chop_all(slc);
+i64 StrSlc_len(StrSlc slc)
+{
+    return slc.len;
+}
 
-    chop = Slc_chop_left(slc, idx);
-    Slc_shift(slc, 1);
+bool StrSlc_empty(StrSlc slc)
+{
+    return slc.len == 0;
+}
+
+void StrSlc_shift(StrSlc * slc, i64 shift)
+{
+    slc->cstr += shift;
+    slc->len -= shift;
+}
+
+StrSlc StrSlc_slice(StrSlc slc, i64 idx, i64 len)
+{
+    return StrSlc_from_cstr_len(slc.cstr + idx, len);
+}
+
+StrSlc StrSlc_copy(StrSlc slc)
+{
+    return StrSlc_from_cstr_len(slc.cstr, slc.len);
+}
+
+StrSlc StrSlc_chop_front(StrSlc * slc, i64 len)
+{
+    StrSlc chop;
+
+    chop = StrSlc_slice(* slc, 0, len);
+    StrSlc_shift(slc, len);
 
     return chop;
 }
 
-Vec Slc_split(Slc slc, byte x)
+StrSlc StrSlc_chop_all(StrSlc * slc)
 {
-    Slc current;
-    Vec vec;
+    StrSlc chop;
 
-    vec = Vec_new(Slc);
-    while (Slc_empty(slc) == false)
+    chop = StrSlc_copy(* slc);
+    StrSlc_shift(slc, slc->len);
+
+    return chop;
+}
+
+StrSlc StrSlc_chop_front_check(StrSlc * slc, i64 len)
+{
+    return len < slc->len ? StrSlc_chop_front(slc, len) : StrSlc_chop_all(slc);
+}
+
+i64 StrSlc_find_c(StrSlc slc, byte x)
+{
+    return cstr_find_c_len(slc.cstr, slc.len, x);
+}
+
+StrSlc StrSlc_split_next(StrSlc * slc, byte x)
+{
+    i64     idx;
+    StrSlc  chop;
+
+    if ((idx = StrSlc_find_c(* slc, x)) == NO_IDX) return StrSlc_chop_all(slc);
+
+    chop = StrSlc_chop_front(slc, idx);
+    StrSlc_shift(slc, 1);
+
+    return chop;
+}
+
+Vec StrSlc_split(StrSlc slc, byte x)
+{
+    Vec     vec;
+
+    vec = Vec_new(StrSlc);
+
+    while (! StrSlc_empty(slc))
     {
-        current = Slc_chop_next(& slc, x);
-        Vec_push(& vec, current, Slc);
+        Vec_push(& vec, StrSlc_split_next(& slc, x), StrSlc);
     }
 
     return vec;
+}
+
+void StrSlc_dbg(StrSlc slc)
+{
+    printf("%.*s ", (int) StrSlc_len(slc), slc.cstr);
+}
+
+void StrSlc_dbgf(const void * slc)
+{
+    StrSlc_dbg(deref(StrSlc) slc);
 }

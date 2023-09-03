@@ -5,13 +5,40 @@
 #define TXT_FILE    "txt.txt"
 #define TEST_FILE   "./lib/src/sort_test.c"
 
-i64 i64_cmp(const i64 * lhs, const i64 * rhs)
+void _i64_test(i64 n)
 {
-    return * lhs - * rhs;
+    Vec v = Vec_new(i64);
+    for (i64 k = 0; k < n; k ++)
+    {
+        Vec_push(& v, n - k, i64);
+    }
+
+    sort_quick(Vec_to_view(v), i64);
+    // sort_quick_f(Vec_to_view(v), (Putf) i64_put, (Swapf) i64_swap, (Cmpf) _test_cmp);
+    // Vec_map(& v, (F) i64_dbgf);
+    i64_dbgf(Vec_last(v));  
+
+    Vec_del(& v);
 }
 
-Putf_gen(i64)
-Swapf_gen(i64)
+void _Str_test()
+{
+    Str s = io_read_file(TXT_FILE);
+    Vec v = Str_split_slices(s, '\n');
+
+    sort_quick(Vec_to_view(v), StrSlc);
+    // Vec_map(& v, (F) StrSlc_dbg);
+    StrSlc_dbgf(Vec_last(v));
+    
+    Str_del(& s);
+    Vec_del(& v);
+}
+
+#define P_HEADER "./src/problems.h"
+static void _gen_p_header(i64 n)
+{
+
+}
 
 //word trim
 //header gen
@@ -20,18 +47,6 @@ Swapf_gen(i64)
 
 int main()
 {
-    i64 n = 1 << 25;
-    Vec v = Vec_new(i64);
-
-    for (i64 k = 0; k < n; k ++)
-    {
-        Vec_push(& v, n - k, i64);
-    }
-
-    sort_quick(Vec_to_View(v), i64);
-    // dbg_Vec(& v, (F) dbg_i64);
-    n = deref(i64) Vec_last(v);
-    dbg_i64(& n);
-    
-    Vec_del(& v);
+    _i64_test(1 << 25);
+    // _Str_test();
 }

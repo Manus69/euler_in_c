@@ -36,12 +36,16 @@ static i64 _partition(View view, Swapf swap, Cmpf cmp)
 
 void sort_quick_f(View view, Putf put, Swapf swap, Cmpf cmp)
 {
-    i64 pivot_idx;
+    i64     pivot_idx;
+    View    lhs;
+    View    rhs;
 
     if (View_len(view) < LEN_LIMIT) return sort_insert_f(view, put, cmp);
 
     pivot_idx = _partition(view, swap, cmp);
+    lhs = View_view(view, 0, pivot_idx);
+    rhs = View_view_from(view, pivot_idx + 1);
 
-    sort_quick_f(View_view(view, 0, pivot_idx), put, swap, cmp);
-    sort_quick_f(View_view_from(view, pivot_idx + 1), put, swap, cmp);
+    sort_quick_f(lhs, put, swap, cmp);
+    sort_quick_f(rhs, put, swap, cmp);
 }

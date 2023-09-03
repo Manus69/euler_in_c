@@ -2,16 +2,9 @@
 #define DEF_H
 
 #include <stdint.h>
+#include "macro.h"
 
 #define NO_IDX          (-1)
-
-#define Putf_gen(type) \
-static inline void type ## _put(type * target, const type * src) \
-{* target = * src;}
-
-#define Swapf_gen(type) \
-static inline void type ## _swap(type * lhs, type * rhs) \
-{type _t = * lhs; * lhs = * rhs; * rhs = _t;}
 
 typedef enum STATUS     STATUS;
 typedef int_fast64_t    i64;

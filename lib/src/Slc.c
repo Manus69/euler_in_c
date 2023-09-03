@@ -1,5 +1,4 @@
 #include "Slc.h"
-#include "macro.h"
 
 Slc Slc_init(void * ptr, i64 size)
 {
@@ -20,37 +19,42 @@ bool Slc_empty(Slc slc)
     return slc.size == 0;
 }
 
-void * Slc_ptr(Slc slc)
-{
-    return slc.ptr;
-}
-
 void * Slc_get(Slc slc, i64 idx)
 {
     return slc.ptr + idx;
 }
 
+void * Slc_first(Slc slc)
+{
+    return slc.ptr;
+}
+
+void Slc_shift(Slc * slc, i64 shift)
+{
+    slc->ptr += shift;
+    slc->size -= shift;
+}
+
 Slc Slc_slice(Slc slc, i64 idx, i64 size)
 {
-    return Slc_init(slc.ptr + idx, size);
+    return Slc_init(Slc_get(slc, idx), size);
 }
 
-Slc Slc_from_Slc(Slc slc)
+Slc Slc_slice_from(Slc slc, i64 idx)
 {
-    return Slc_slice(slc, 0, slc.size);
+    return Slc_slice(slc, idx, slc.size - idx);
 }
 
-void Slc_shift(Slc * slc, i64 size)
+Slc Slc_copy(Slc slc)
 {
-    slc->ptr += size;
-    slc->size -= size;
+    return Slc_init(slc.ptr, slc.size);
 }
 
-Slc Slc_chop_left(Slc * slc, i64 size)
+Slc Slc_chop_front(Slc * slc, i64 size)
 {
     Slc chop;
 
-    chop = Slc_slice(* slc, 0, size);
+    chop = Slc_init(slc->ptr, size);
     Slc_shift(slc, size);
 
     return chop;
@@ -58,17 +62,22 @@ Slc Slc_chop_left(Slc * slc, i64 size)
 
 Slc Slc_chop_all(Slc * slc)
 {
-    return Slc_chop_left(slc, slc->size);
+    Slc chop;
+
+    chop = Slc_copy(* slc);
+    Slc_shift(slc, slc->size);
+
+    return chop;
 }
 
-Slc Slc_chop_left_check(Slc * slc, i64 size)
+Slc Slc_chop_front_check(Slc * slc, i64 size)
 {
-    return size < slc->size ? Slc_chop_left(slc, size) : Slc_chop_all(slc);
+    return size < slc->size ? Slc_chop_front(slc, size) : Slc_chop_all(slc);
 }
 
-Slc Slc_chop_left_check_likely(Slc * slc, i64 size)
+Slc Slc_chop_front_check_likely(Slc * slc, i64 size)
 {
-    if (likely(size < slc->size)) return Slc_chop_left(slc, size);
+    if (likely(slc->size < size)) return Slc_chop_front(slc, size);
 
     return Slc_chop_all(slc);
 }

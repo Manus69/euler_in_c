@@ -1,35 +1,23 @@
 #include "Vec.h"
 #include "mem.h"
-#include "math.h"
-
-#include <string.h>
+#include "View.h"
 
 #define VEC_DC (1 << 4)
 
-Vec Vec_own(void * data, i64 item_size, i64 data_size)
+Vec Vec_new_capacity(i64 capacity, i64 item_size)
 {
     return (Vec)
     {
-        .data = data,
-        .idx = 0,
+        .data = mem_alloc0(capacity * item_size),
         .item_size = item_size,
-        .size_in_items = data_size / item_size,
+        .idx = 0,
+        .capacity = capacity,
     };
-}
-
-Vec Vec_new_n_items(i64 item_size, i64 n_items)
-{
-    return Vec_own(mem_alloc0(n_items * item_size), item_size, n_items * item_size);
-}
-
-void Vec_shift_idx(Vec * vec, i64 shift)
-{
-    vec->idx += shift;
 }
 
 Vec Vec_new_item_size(i64 item_size)
 {
-    return Vec_new_n_items(item_size, VEC_DC);
+    return Vec_new_capacity(VEC_DC, item_size);
 }
 
 void Vec_del(Vec * vec)
@@ -43,14 +31,14 @@ i64 Vec_len(Vec vec)
     return vec.idx;
 }
 
-i64 Vec_len_in_bytes(Vec vec)
-{
-    return vec.idx * vec.item_size;
-}
-
 i64 Vec_capacity(Vec vec)
 {
-    return vec.size_in_items - vec.idx;
+    return vec.capacity - vec.idx;
+}
+
+i64 Vec_allocated_size(Vec vec)
+{
+    return vec.capacity * vec.item_size;
 }
 
 void * Vec_get(Vec vec, i64 idx)
@@ -68,41 +56,15 @@ void * Vec_last(Vec vec)
     return Vec_get(vec, vec.idx - 1);
 }
 
-void * Vec_pop(Vec * vec)
-{
-    Vec_shift_idx(vec, -1);
-
-    return Vec_get(* vec, vec->idx);
-}
-
-void * Vec_pop_all(Vec * vec)
-{
-    vec->idx = 0;
-
-    return vec->data;
-}
-
 void Vec_extend(Vec * vec, i64 len)
 {
-    mem_extend((void **) & vec->data, vec->size_in_items * vec->item_size, len * vec->item_size);
-    vec->size_in_items += len;
+    mem_extend(& vec->data, Vec_allocated_size(* vec), len * vec->item_size);
+    vec->capacity += len;
 }
 
-void Vec_double_capacity(Vec * vec)
+void Vec_double(Vec * vec)
 {
-    Vec_extend(vec, vec->size_in_items);
-}
-
-void Vec_reserve(Vec * vec, i64 len)
-{
-    if (Vec_capacity(* vec) < len) Vec_extend(vec, len);
-}
-
-void Vec_push_many(Vec * vec, const void * src, i64 len)
-{
-    Vec_reserve(vec, len);
-    memcpy(Vec_get(* vec, vec->idx), src, len * vec->item_size);
-    vec->idx += len;
+    Vec_extend(vec, vec->capacity);
 }
 
 View Vec_view(Vec vec, i64 idx, i64 len)
@@ -110,12 +72,12 @@ View Vec_view(Vec vec, i64 idx, i64 len)
     return View_init(Vec_get(vec, idx), vec.item_size, len);
 }
 
-View Vec_to_View(Vec vec)
+View Vec_to_view(Vec vec)
 {
     return Vec_view(vec, 0, vec.idx);
 }
 
 void Vec_map(Vec vec, F f)
 {
-    View_map(Vec_to_View(vec), f);
+    View_map(Vec_to_view(vec), f);
 }

@@ -1,15 +1,18 @@
 #include "def.h"
 #include "math.h"
-
 #include <string.h>
 
 i64 cstr_cmp_len(const byte * lhs, i64 lhs_len, const byte * rhs, i64 rhs_len)
 {
-    i64 cmp;
+    i64 len;
 
-    cmp = strncmp(lhs, rhs, min(lhs_len, rhs_len));
+    len = min(lhs_len, rhs_len);
+    for (i64 k = 0; k < len; k ++)
+    {
+        if (lhs[k] != rhs[k]) return lhs[k] - rhs[k];
+    }
 
-    return cmp ? cmp : lhs_len > rhs_len ? 1 : -1;
+    return rhs_len > lhs_len ? -1 : lhs_len > rhs_len;
 }
 
 i64 cstr_cmp(const byte * lhs, const byte * rhs)
@@ -17,7 +20,7 @@ i64 cstr_cmp(const byte * lhs, const byte * rhs)
     return strcmp(lhs, rhs);
 }
 
-i64 cstr_findc_len(const byte * cstr, i64 len, byte x)
+i64 cstr_find_c_len(const byte * cstr, i64 len, byte x)
 {
     for (i64 k = 0; k < len; k ++)
     {
@@ -27,9 +30,9 @@ i64 cstr_findc_len(const byte * cstr, i64 len, byte x)
     return NO_IDX;
 }
 
-i64 cstr_findc(const byte * cstr, byte x)
+i64 cstr_find_c(const byte * cstr, byte x)
 {
-    return cstr_findc_len(cstr, strlen(cstr), x);
+    return cstr_find_c_len(cstr, strlen(cstr), x);
 }
 
 i64 cstr_find_cstr_len(const byte * haystack, i64 h_len, const byte * needle, i64 n_len)
