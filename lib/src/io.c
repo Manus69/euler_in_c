@@ -40,6 +40,24 @@ Str io_read_file(const byte * name)
     return str;
 }
 
+i64 io_write_fd(Str str, int fd)
+{
+    return write(fd, Str_first(str), Str_len(str));
+}
+
+i64 io_write_to_file(Str str, const byte * name)
+{
+    int fd;
+    i64 result;
+
+    if ((fd = open(name, O_WRONLY)) < 0) return NO_IDX;
+
+    result = io_write_fd(str, fd);
+    close(fd);
+
+    return result;
+}
+
 int io_file_new(const byte * name, int perms)
 {
     return creat(name, perms);

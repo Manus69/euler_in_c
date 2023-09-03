@@ -24,7 +24,7 @@ static inline void type ## _put(type * dst, const type * src) \
 #define Putf_gen(type) \
 static inline void type ## _putf(void * dst, const void * src) {put_(dst, src, type);}
 
-#define swap_ptr_(lhs, rhs, type) \
+#define swap_ptr(lhs, rhs, type) \
 {type _t = deref(type) lhs; deref(type) lhs = deref(type) rhs; deref(type) rhs = _t;}
 
 #define Swap_gen(type) \
@@ -32,7 +32,7 @@ static inline void type ## _swap(type * lhs, type * rhs) \
 {type _t = * lhs; * lhs = * rhs; * rhs = _t;}
 
 #define Swapf_gen(type) \
-static inline void type ## _swapf(void * lhs, void * rhs) swap_ptr_(lhs, rhs, type)
+static inline void type ## _swapf(void * lhs, void * rhs) swap_ptr(lhs, rhs, type)
 
 #define Cmp_gen(type) \
 static inline i64 type ## _cmp(type lhs, type rhs) \

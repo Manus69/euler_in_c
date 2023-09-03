@@ -65,6 +65,12 @@ void Str_reserve_agro(Str * str, i64 len);
 StrSlc Str_slice(Str str, i64 idx, i64 len);
 StrSlc Str_to_slice(Str str);
 Vec Str_split_slices(Str str, byte x);
+void Str_append_cstr_len(Str * str, const byte * cstr, i64 len);
+void Str_append_cstr(Str * str, const byte * cstr);
+void Str_append_Str(Str * lhs, Str rhs);
+Str Str_join_cstr(const byte * cstrs[]);
 void Str_dbg(Str str);
+void Str_dbgf(const void * str);
+
 
 #endif

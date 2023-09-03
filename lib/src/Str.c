@@ -109,7 +109,41 @@ Vec Str_split_slices(Str str, byte x)
     return StrSlc_split(Str_to_slice(str), x);
 }
 
+void Str_append_cstr_len(Str * str, const byte * cstr, i64 len)
+{
+    if (unlikely(Str_capacity(* str) < len)) Str_reserve_agro(str, len);
+
+    memcpy(Str_get(* str, str->idx), cstr, len);
+    str->idx += len;
+}
+
+void Str_append_cstr(Str * str, const byte * cstr)
+{
+    return Str_append_cstr_len(str, cstr, strlen(cstr));
+}
+
+void Str_append_Str(Str * lhs, Str rhs)
+{
+    return Str_append_cstr_len(lhs, Str_first(rhs), rhs.idx);
+}
+
+Str Str_join_cstr(const byte * cstrs[])
+{
+    Str             str;
+    const byte *    current;
+
+    str = Str_new();
+    while ((current = * cstrs ++)) Str_append_cstr(& str, current);
+
+    return str;
+}
+
 void Str_dbg(Str str)
 {
     printf("%s ", str.cstr);
+}
+
+void Str_dbgf(const void * str)
+{
+    Str_dbg(deref(Str) str);
 }

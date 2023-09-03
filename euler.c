@@ -1,9 +1,10 @@
 #include "./lib/libEuler.h"
+#include "./src/head_gen.h"
 
 #include <stdio.h>
 
-#define TXT_FILE    "txt.txt"
-#define TEST_FILE   "./lib/src/sort_test.c"
+#define TXT_FILE        "txt.txt"
+#define F_TABLE_FILE    "./src/p_table.h"
 
 void _i64_test(i64 n)
 {
@@ -34,19 +35,17 @@ void _Str_test()
     Vec_del(& v);
 }
 
-#define P_HEADER "./src/problems.h"
-static void _gen_p_header(i64 n)
-{
-
-}
 
 //word trim
 //header gen
 //code align
 //regex
+//tests go in a separate file
 
 int main()
 {
-    _i64_test(1 << 25);
+    // _i64_test(1 << 25);
     // _Str_test();
+
+    generate_header(F_TABLE_FILE, 100);
 }
