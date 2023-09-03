@@ -48,7 +48,7 @@ static Str _gen_table(i64 n)
     for (i64 k = 0; k <= n; k ++)
     {
         len = sprintf(buff, "%ld", k);
-        Str_append_cstr(& str, "\t" F_NAME "_");
+        Str_append_cstr(& str, "\t" F_NAME);
         Str_append_cstr_len(& str, buff, len);
         Str_append_cstr(& str, ",\n");
     }
@@ -69,9 +69,9 @@ void generate_header(const byte * name, i64 n_problems)
     bot = _gen_table(n_problems);
     Str_append_Str(& top, bot);
 
-    if ((fd = open(name, O_RDWR | O_CREAT)) >= 0)
+    if ((fd = open(name, O_RDWR | O_CREAT, 0666)) >= 0)
     {
-        
+        io_write_fd(top, fd);
     }
 
     Str_del(& top);

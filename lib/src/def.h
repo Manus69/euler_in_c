@@ -9,6 +9,7 @@
 typedef enum STATUS     STATUS;
 typedef int_fast64_t    i64;
 typedef uint_fast64_t   u64;
+typedef uint_fast8_t    u8;
 typedef char            byte;
 typedef void            (* F)(void *);
 typedef void            (* Putf)(void *, const void *);

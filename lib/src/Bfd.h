@@ -7,7 +7,7 @@ typedef struct Bfd Bfd;
 
 struct Bfd
 {
-    u64 *   field;
+    u8 *    field;
     i64     len;
 };
 
