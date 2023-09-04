@@ -14,5 +14,6 @@
 #include "./src/sort.h"
 #include "./src/Bfd.h"
 #include "./src/Sieve.h"
+#include "./src/math.h"
 
 #endif

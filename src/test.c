@@ -60,3 +60,19 @@ void _Sieve_test(u64 n)
     Sieve_del(& s);
     Vec_del(& v);
 }
+
+void _fold_test(i64 n)
+{
+    Vec v = Vec_new(i64);
+    for (i64 k = 0; k <= n; k ++)
+    {
+        Vec_push(& v, k, i64);
+    }
+
+    i64 x = 0;
+    Vec_fold(& x, v, i64_addf);
+    Vec_del(& v);
+    
+    i64_dbg(x);
+    u64_dbg(math_arith_prog_sum(n));
+}

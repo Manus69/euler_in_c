@@ -28,17 +28,21 @@ static int _error(const byte * msg)
 //code align
 //regex
 //c flags
+// fold ? filter ?
 
 int main(int argc, char * argv[])
 {
-    u64     n;
-    fptr    function;
+    // u64     n;
+    // fptr    function;
 
-    if (argc != 2) return _error(USE_MSG);
+    // if (argc != 2) return _error(USE_MSG);
 
-    n = u64_parse_cstr(argv[1]);
-    if (n == 0 || n > N_PROBLEMS) return _error(INPUT_MSG);
-    if (! (function = call_table[n])) return _error(PROB_MSG);
+    // n = u64_parse_cstr(argv[1]);
+    // if (n == 0 || n > N_PROBLEMS) return _error(INPUT_MSG);
+    // if (! (function = call_table[n])) return _error(PROB_MSG);
 
-    function();
+    // function();
+
+    u64 x = math_gcd(24, 661);
+    u64_dbg(x);
 }

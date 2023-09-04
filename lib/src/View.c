@@ -60,3 +60,8 @@ void View_map(View view, F f)
 {
     mem_raw_map(f, view.ptr, View_size(view), view.item_size);
 }
+
+void View_fold(void * target, View view, Putf op)
+{
+    mem_raw_fold(target, View_first(view), op, View_size(view), view.item_size);
+}

@@ -81,3 +81,8 @@ void Vec_map(Vec vec, F f)
 {
     View_map(Vec_to_view(vec), f);
 }
+
+void Vec_fold(void * target, Vec vec, Putf op)
+{
+    View_fold(target, Vec_to_view(vec), op);
+}

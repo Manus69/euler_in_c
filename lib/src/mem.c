@@ -53,3 +53,13 @@ void mem_raw_map(void (* f)(void *), void * data, i64 size, i64 step)
         size -= step;
     }
 }
+
+void mem_raw_fold(void * restrict target, const void * restrict data, Putf op, i64 size, i64 step)
+{
+    while (size > 0)
+    {
+        op(target, data);
+        data += step;
+        size -= step;
+    }
+}
