@@ -30,3 +30,21 @@ void _Str_test()
     Str_del(& s);
     Vec_del(& v);
 }
+
+void _Bfd_test()
+{
+    i64 n = 10;
+    Bfd bfd = Bfd_new(n);
+
+    Bfd_bit_set(bfd, 1);
+    Bfd_dbg(bfd);
+    
+    Bfd_bit_clear(bfd, 1);
+    Bfd_dbg(bfd);
+
+    Bfd_bit_set(bfd, 11);
+    Bfd_bit_toggle(bfd, 9);
+    Bfd_dbg(bfd);
+
+    Bfd_del(& bfd);
+}

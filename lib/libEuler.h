@@ -11,5 +11,6 @@
 #include "./src/Vec.h"
 #include "./src/io.h"
 #include "./src/sort.h"
+#include "./src/Bfd.h"
 
 #endif

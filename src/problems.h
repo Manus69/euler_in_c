@@ -1,8 +1,6 @@
 #ifndef P_TABLE_H
 #define P_TABLE_H
 
-typedef void (* fptr)(void);
-
 void p_0(void);
 void p_1(void);
 void p_2(void);
@@ -104,11 +102,5 @@ void p_97(void);
 void p_98(void);
 void p_99(void);
 void p_100(void);
-
-static const fptr call_table[] = 
-{
-	NULL,
-	p_1,
-};
 
 #endif

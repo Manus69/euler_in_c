@@ -45,12 +45,12 @@ i64 io_write_fd(Str str, int fd)
     return write(fd, Str_first(str), Str_len(str));
 }
 
-i64 io_write_to_file(Str str, const byte * name)
+i64 io_write_to_file(const byte * name, Str str)
 {
     int fd;
     i64 result;
 
-    if ((fd = open(name, O_WRONLY)) < 0) return NO_IDX;
+    if ((fd = open(name, O_CREAT | O_RDWR)) < 0) return NO_IDX;
 
     result = io_write_fd(str, fd);
     close(fd);
