@@ -4,5 +4,7 @@
 Putf_gen(u64)
 Swapf_gen(u64)
 
-i64 u64_parse_cstr_len(const byte * cstr, i64 len);
-i64 u64_parse_cstr(const byte * cstr);
+i64     u64_parse_cstr_len(const byte * cstr, i64 len);
+i64     u64_parse_cstr(const byte * cstr);
+void    u64_dbg(u64 x);
+void    u64_dbgf(const void * x);

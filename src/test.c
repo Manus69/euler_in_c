@@ -34,7 +34,7 @@ void _Str_test()
 void _Bfd_test()
 {
     i64 n = 10;
-    Bfd bfd = Bfd_new(n);
+    Bfd bfd = Bfd_new0(n);
 
     Bfd_bit_set(bfd, 1);
     Bfd_dbg(bfd);
@@ -47,4 +47,16 @@ void _Bfd_test()
     Bfd_dbg(bfd);
 
     Bfd_del(& bfd);
+}
+
+void _Sieve_test(u64 n)
+{
+    Sieve s = Sieve_new(n);
+    Vec v = Sieve_to_Vec(s);
+
+    // Vec_map(v, (F) u64_dbgf);
+    u64_dbgf(Vec_last(v));
+
+    Sieve_del(& s);
+    Vec_del(& v);
 }

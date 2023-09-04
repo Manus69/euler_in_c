@@ -2,6 +2,7 @@
 #define BFD_H
 
 #include "def.h"
+#include "macro.h"
 
 typedef struct Bfd Bfd;
 
@@ -11,8 +12,13 @@ struct Bfd
     i64     size;
 };
 
-Bfd     Bfd_new(i64 n_bits);
+Putf_gen(Bfd)
+Swapf_gen(Bfd)
+
+Bfd     Bfd_new0(i64 n_bits);
+Bfd     Bfd_new1(i64 n_bits);
 void    Bfd_del(Bfd * bfd);
+i64     Bfd_n_bits(Bfd bfd);
 bool    Bfd_bit(Bfd bfd, i64 n);
 void    Bfd_bit_set(Bfd bfd, i64 n);
 void    Bfd_bit_clear(Bfd bfd, i64 n);

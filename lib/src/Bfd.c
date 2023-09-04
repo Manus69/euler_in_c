@@ -21,7 +21,7 @@ static inline u8 * _cell(Bfd bfd, i64 bit)
     return bfd.field + _index(bit);
 }
 
-Bfd Bfd_new(i64 n_bits)
+Bfd Bfd_new0(i64 n_bits)
 {
     return (Bfd)
     {
@@ -30,10 +30,25 @@ Bfd Bfd_new(i64 n_bits)
     };
 }
 
+Bfd Bfd_new1(i64 n_bits)
+{
+    Bfd bfd;
+
+    bfd = Bfd_new0(n_bits);
+    memset(bfd.field, UINT8_MAX, bfd.size);
+
+    return bfd;
+}
+
 void Bfd_del(Bfd * bfd)
 {
     mem_del(bfd->field);
     to0(bfd, Bfd);
+}
+
+i64 Bfd_n_bits(Bfd bfd)
+{
+    return bfd.size * __CHAR_BIT__;
 }
 
 bool Bfd_bit(Bfd bfd, i64 n)
