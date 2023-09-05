@@ -3,6 +3,7 @@
 
 #include "def.h"
 #include "Vec.h"
+#include "Pair.h"
 
 #define math_sum_gen(type) \
 static inline type type ## _sum(const type * ptr, i64 n_items) \
@@ -26,6 +27,10 @@ u64 math_arith_prog_sum(u64 n);
 u64 math_factorial(u64 n);
 u64 math_gcd(u64 x, u64 y);
 u64 math_lcm(u64 x, u64 y);
+u64 math_pow(u64 base, u64 exp);
 Vec math_divisors(u64 x);
+Vec math_prime_divisors(u64 x);
+u64 math_prime_divisor_power(u64 x, u64 p);
+Vec math_prime_divisor_pairs(u64 x);
 
 #endif

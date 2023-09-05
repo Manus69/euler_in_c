@@ -1,6 +1,7 @@
 #include "Str.h"
 #include "cstr.h"
 #include "mem.h"
+#include "u8.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -136,6 +137,22 @@ Str Str_join_cstr(const byte * cstrs[])
     while ((current = * cstrs ++)) Str_append_cstr(& str, current);
 
     return str;
+}
+
+void Str_rev(Str str)
+{
+    byte * lhs;
+    byte * rhs;
+
+    lhs = Str_first(str);
+    rhs = Str_get(str, Str_len(str) - 1);
+
+    while (lhs < rhs)
+    {
+        swap_ptr(lhs, rhs, byte);
+        lhs ++;
+        rhs --;
+    }
 }
 
 void Str_dbg(Str str)

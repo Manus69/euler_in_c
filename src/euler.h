@@ -1,5 +1,5 @@
-#ifndef TEST_H
-#define TEST_H
+#ifndef EULER_H
+#define EULER_H
 
 #include "../lib/libEuler.h"
 #include <stdio.h>
