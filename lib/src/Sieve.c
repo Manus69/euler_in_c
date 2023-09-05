@@ -51,15 +51,44 @@ bool Sieve_is_prime(Sieve sieve, u64 n)
     return Bfd_bit(sieve.bfd, n);
 }
 
-Vec Sieve_to_Vec(Sieve sieve)
+Vec Sieve_primes_lt(Sieve sieve, u64 n)
 {
     Vec vec;
-
+    
     vec = Vec_new(u64);
-    for (u64 k = 2; k < Sieve_size(sieve); k ++)
+    n = n < Sieve_size(sieve) ? n : Sieve_size(sieve);
+    
+    for (u64 k = 2; k < n; k ++)
     {
         if (Sieve_is_prime(sieve, k)) Vec_push(& vec, k, u64);
     }
 
     return vec;
+}
+
+Vec Sieve_primes(Sieve sieve, u64 count)
+{
+    Vec vec;
+    u64 k;
+
+    k = 2;
+    vec = Vec_new(u64);
+
+    while (count && (k < Sieve_size(sieve)))
+    {
+        if (Sieve_is_prime(sieve, k))
+        {
+            Vec_push(& vec, k, u64);
+            count --;
+        }
+
+        k ++;
+    }
+
+    return vec;
+}
+
+Vec Sieve_to_Vec(Sieve sieve)
+{
+    return Sieve_primes_lt(sieve, Sieve_size(sieve));
 }

@@ -15,5 +15,6 @@
 #include "./src/Bfd.h"
 #include "./src/Sieve.h"
 #include "./src/math.h"
+#include "./src/Pair.h"
 
 #endif

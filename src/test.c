@@ -76,3 +76,41 @@ void _fold_test(i64 n)
     i64_dbg(x);
     u64_dbg(math_arith_prog_sum(n));
 }
+
+void _Pair_test()
+{
+    i64 n = 1 << 25;
+    Vec v = Vec_new(Pair);
+    for (i64 k = 0; k < n; k ++)
+    {
+        Pair p = Pair_new(k, -k, i64, i64);
+        Vec_push(& v, p, Pair);
+    }
+
+    Pair p = deref(Pair) Vec_last(v);
+    i64_dbgf(Pair_get(p, 0));
+    i64_dbgf(Pair_get(p, 1));
+
+    Vec_map(v, (F) Pair_del);
+    Vec_del(& v);
+}
+
+Pair_struct_gen(i64, i64)
+
+void _Pair_typed_test()
+{
+    i64 n = 1 << 25;
+    Vec v = Vec_new(Pair_i64_i64);
+    for (i64 k = 0; k < n; k ++)
+    {
+        Pair_i64_i64 p = {k , -k};
+        Vec_push(& v, p, Pair_i64_i64);
+
+    }
+
+    Pair_i64_i64 x = deref(Pair_i64_i64) Vec_last(v);
+    printf("%ld %ld\n", x.left, x.right);
+
+    Vec_del(& v);
+
+}

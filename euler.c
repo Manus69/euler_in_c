@@ -43,6 +43,5 @@ int main(int argc, char * argv[])
 
     // function();
 
-    u64 x = math_gcd(24, 660);
-    u64_dbg(x);
+    _Pair_typed_test();
 }
