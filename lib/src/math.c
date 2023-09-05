@@ -35,3 +35,20 @@ u64 math_lcm(u64 x, u64 y)
 {
     return x * y / math_gcd(x, y); 
 }
+
+Vec math_divisors(u64 x)
+{
+    Vec vec;
+
+    vec = Vec_new(u64);
+    for (u64 k = 1; k <= x; k ++)
+    {
+        if (x % k == 0)
+        {
+            Vec_push(& vec, k, u64);
+            x /= k;
+        }
+    }
+
+    return vec;
+}

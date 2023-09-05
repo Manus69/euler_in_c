@@ -43,6 +43,6 @@ int main(int argc, char * argv[])
 
     // function();
 
-    u64 x = math_gcd(24, 661);
+    u64 x = math_gcd(24, 660);
     u64_dbg(x);
 }
