@@ -5,6 +5,7 @@
 #define N_ROWS  20
 #define N_COLS  20
 #define LEN     2
+#define N       4
 
 static u64 _parse(StrSlc slc)
 {
@@ -36,11 +37,101 @@ static Tbl _get_tbl(const byte * file_name)
     return tbl;
 }
 
+static u64 _down(Tbl tbl, i64 row, i64 col)
+{
+    u64 x;
+
+    if (row + N >= Tbl_n_rows(tbl)) return 0;
+
+    x = 1;
+    for (i64 k = 0; k < N; k ++)
+    {
+        x *= deref(u64) Tbl_get(tbl, row + k, col);
+    }
+
+    return x;
+}
+
+static u64 _right(Tbl tbl, i64 row, i64 col)
+{
+    u64 x;
+
+    if (col + N >= Tbl_n_cols(tbl)) return 0;
+
+    x = 1;
+    for (i64 k = 0; k < N; k ++)
+    {
+        x *= deref(u64) Tbl_get(tbl, row, col + k);
+    }
+
+    return x;
+}
+
+static u64 _top_right(Tbl tbl, i64 row, i64 col)
+{
+    u64 x;
+
+    if (row + N >= Tbl_n_rows(tbl)) return 0;
+    if (col + N >= Tbl_n_cols(tbl)) return 0;
+
+    x = 1;
+    for (i64 k = 0; k < N; k ++)
+    {
+        x *= deref(u64) Tbl_get(tbl, row + k, col + k);
+    }
+
+    return x;
+}
+
+static u64 _top_left(Tbl tbl, i64 row, i64 col)
+{
+    u64 x;
+
+    if (row + N >= Tbl_n_rows(tbl)) return 0;
+    if (col - N < 0) return 0;
+
+    x = 1;
+    for (i64 k = 0; k < N; k ++)
+    {
+        x *= deref(u64) Tbl_get(tbl, row + k, col - k);
+    }
+
+    return x;
+}
+
+static u64 _max_in_table(Tbl tbl)
+{
+    Vec vec;
+    i64 max_idx;
+    u64 max;
+
+    vec = Vec_new(u64);
+    for (i64 row = 0; row < Tbl_n_rows(tbl); row ++)
+    {
+        for (i64 col = 0; col < Tbl_n_cols(tbl); col ++)
+        {
+            Vec_push(& vec, _right(tbl, row, col), u64);
+            Vec_push(& vec, _down(tbl, row, col), u64);
+            Vec_push(& vec, _top_right(tbl, row, col), u64);
+            Vec_push(& vec, _top_left(tbl, row, col), u64);
+        }
+    }
+
+    max_idx = Vec_max_idx(vec, u64_cmpf);
+    max = deref(u64) Vec_get(vec, max_idx);
+    Vec_del(& vec);
+
+    return max;
+}
+
 void p_11(void)
 {
     Tbl tbl;
+    u64 max;
 
     tbl = _get_tbl(FILE);
-    Tbl_map(tbl, (F) u64_dbgf);
+    max = _max_in_table(tbl);
+
     Tbl_del(& tbl);
+    u64_dbg(max);
 }

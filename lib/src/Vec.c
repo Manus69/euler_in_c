@@ -77,6 +77,11 @@ View Vec_to_view(Vec vec)
     return Vec_view(vec, 0, vec.idx);
 }
 
+i64 Vec_max_idx(Vec vec, Cmpf cmp)
+{
+    return View_max_idx(Vec_to_view(vec), cmp);
+}
+
 void Vec_map(Vec vec, F f)
 {
     View_map(Vec_to_view(vec), f);

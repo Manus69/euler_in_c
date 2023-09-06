@@ -56,6 +56,19 @@ View View_view_from(View view, i64 idx)
     return View_view(view, idx, view.len - idx);
 }
 
+i64 View_max_idx(View view, Cmpf cmp)
+{
+    i64 max_idx;
+
+    max_idx = 0;
+    for (i64 k = 1; k < view.len; k ++)
+    {
+        if (cmp(View_get(view, k), View_get(view, max_idx)) > 0) max_idx = k;
+    }
+
+    return max_idx;
+}
+
 void View_map(View view, F f)
 {
     mem_raw_map(f, view.ptr, View_size(view), view.item_size);

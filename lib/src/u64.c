@@ -3,6 +3,16 @@
 #include <string.h>
 #include <stdio.h>
 
+i64 u64_cmp(u64 lhs, u64 rhs)
+{
+    return lhs < rhs ? -1 : lhs > rhs;
+}
+
+i64 u64_cmpf(const void * lhs, const void * rhs)
+{
+    return u64_cmp(deref(u64) lhs, deref(u64) rhs);
+}
+
 u64 u64_parse_cstr_len(const byte * cstr, i64 len)
 {
     u64 result;

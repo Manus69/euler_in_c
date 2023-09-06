@@ -20,6 +20,8 @@ struct Tbl
 Tbl     Tbl_new_item_size(i64 n_rows, i64 n_cols, i64 item_size);
 void    Tbl_del(Tbl * tbl);
 i64     Tbl_size(Tbl tbl);
+i64     Tbl_n_rows(Tbl tbl);
+i64     Tbl_n_cols(Tbl tbl);
 void *  Tbl_get(Tbl tbl, i64 row, i64 col);
 void *  Tbl_nth(Tbl tbl, i64 n);
 void *  Tbl_row(Tbl tbl, i64 row);

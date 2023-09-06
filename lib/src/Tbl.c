@@ -23,6 +23,16 @@ i64 Tbl_size(Tbl tbl)
     return tbl.item_size * tbl.n_rows * tbl.n_cols;
 }
 
+i64 Tbl_n_rows(Tbl tbl)
+{
+    return tbl.n_rows;
+}
+
+i64 Tbl_n_cols(Tbl tbl)
+{
+    return tbl.n_cols;
+}
+
 static inline i64 _idx(i64 row, i64 col, i64 item_size, i64 n_cols)
 {
     return (n_cols * row + col) * item_size;

@@ -26,6 +26,7 @@ void    Vec_del(Vec * vec);
 i64     Vec_len(Vec vec);
 i64     Vec_capacity(Vec vec);
 i64     Vec_allocated_size(Vec vec);
+i64     Vec_max_idx(Vec vec, Cmpf cmp);
 void *  Vec_get(Vec vec, i64 idx);
 void *  Vec_first(Vec vec);
 void *  Vec_last(Vec vec);
