@@ -123,6 +123,11 @@ void Str_append_cstr(Str * str, const byte * cstr)
     return Str_append_cstr_len(str, cstr, strlen(cstr));
 }
 
+void Str_append_Slc(Str * str, StrSlc slc)
+{
+    Str_append_cstr_len(str, slc.cstr, slc.len);
+}
+
 void Str_append_Str(Str * lhs, Str rhs)
 {
     return Str_append_cstr_len(lhs, Str_first(rhs), rhs.idx);
@@ -153,6 +158,49 @@ void Str_rev(Str str)
         lhs ++;
         rhs --;
     }
+}
+
+Str StrSlc_replace_cstr_len(StrSlc slc, const byte * what, i64 w_len, const byte * to, i64 t_len)
+{
+    Str result;
+    i64 idx;
+
+    result = Str_new_capacity(slc.len);
+
+    while ((idx = StrSlc_find_cstr_len(slc, what, w_len)) != NO_IDX)
+    {
+        Str_append_cstr_len(& result, slc.cstr, idx);
+        Str_append_cstr_len(& result, to, t_len);
+        StrSlc_shift(& slc, idx + w_len);
+    }
+
+    Str_append_Slc(& result, slc);
+
+    return result;
+}
+
+Str StrSlc_replace_cstr(StrSlc slc, const byte * what, const byte * to)
+{
+    return StrSlc_replace_cstr_len(slc, what, strlen(what), to, strlen(to));
+}
+
+Str Str_replace_cstr_len(Str str, const byte * what, i64 w_len, const byte * to, i64 t_len)
+{
+    return StrSlc_replace_cstr_len(Str_to_slice(str), what, w_len, to, t_len);
+}
+
+Str Str_replace_cstr(Str str, const byte * what, const byte * to)
+{
+    return Str_replace_cstr_len(str, what, strlen(what), to, strlen(to));
+}
+
+void Str_replace_cstr_in_situ(Str * str, const byte * what, const byte * to)
+{
+    Str new;
+
+    new = Str_replace_cstr(* str, what, to);
+    Str_del(str);
+    * str = new;
 }
 
 void Str_dbg(Str str)

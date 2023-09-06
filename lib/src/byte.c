@@ -19,3 +19,8 @@ bool byte_is_alpha(byte x)
 {
     return byte_is_lower(x) || byte_is_upper(x);
 }
+
+bool byte_is_ws(byte x)
+{
+    return x == ' ' || x == '\n' || x == '\t';
+}

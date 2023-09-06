@@ -1,4 +1,5 @@
 #include "Sieve.h"
+#include "math.h"
 
 static void _cast_out(Bfd bfd, i64 p)
 {
@@ -35,6 +36,15 @@ Sieve Sieve_new(i64 size)
     return (Sieve) {bfd};
 }
 
+Sieve Sieve_new_n_primes(i64 n_primes)
+{
+    i64 size; 
+
+    size = n_primes * math_log2(n_primes);
+
+    return Sieve_new(size);
+}
+
 void Sieve_del(Sieve * sieve)
 {
     Bfd_del(& sieve->bfd);
@@ -49,6 +59,20 @@ u64 Sieve_size(Sieve sieve)
 bool Sieve_is_prime(Sieve sieve, u64 n)
 {
     return Bfd_bit(sieve.bfd, n);
+}
+
+u64 Sieve_nth_prime(Sieve sieve, i64 n)
+{
+    i64 count;
+
+    count = 0;
+    for (u64 k = 2; k < Sieve_size(sieve); k ++)
+    {
+        if (Sieve_is_prime(sieve, k)) count ++;
+        if (count == n + 1) return k;
+    }
+
+    return 0;
 }
 
 Vec Sieve_primes_lt(Sieve sieve, u64 n)

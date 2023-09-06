@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 
-i64 u64_parse_cstr_len(const byte * cstr, i64 len)
+u64 u64_parse_cstr_len(const byte * cstr, i64 len)
 {
     u64 result;
 
@@ -21,7 +21,7 @@ i64 u64_parse_cstr_len(const byte * cstr, i64 len)
     return result;
 }
 
-i64 u64_parse_cstr(const byte * cstr)
+u64 u64_parse_cstr(const byte * cstr)
 {
     return u64_parse_cstr_len(cstr, strlen(cstr));
 }

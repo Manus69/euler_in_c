@@ -1,4 +1,4 @@
-#include "test.h"
+#include "euler.h"
 
 #define TXT_FILE "../txt.txt"
 
