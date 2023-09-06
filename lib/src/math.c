@@ -57,10 +57,16 @@ Vec math_divisors(u64 x)
     Vec vec;
 
     vec = Vec_new(u64);
-    for (u64 k = 1; k * k <= x; k ++)
+    Vec_push(& vec, 1, u64);
+
+    if (x == 1) return vec;
+
+    for (u64 k = 2; k <= x / 2; k ++)
     {
         if (x % k == 0) Vec_push(& vec, k, u64);
     }
+
+    Vec_push(& vec, x, u64);
 
     return vec;
 }
