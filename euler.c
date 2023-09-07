@@ -34,25 +34,31 @@ static inline int _error(const byte * msg)
     return printf("%s\n", msg);
 }
 
+static inline int _test()
+{
+    _Deck_test(1000);
+
+    return 0;
+}
+
 static inline void _run(fptr f)
 {
     f();
     nl;
 }
 
-//word trim
 //header gen
 //code align
 //regex
 //c flags
 // fold ? filter ?
-//test.h -> something else.h ?
 
 int main(int argc, char * argv[])
 {
     u64     n;
     fptr    function;
 
+    if (argc == 1) return _test();
     if (argc != 2) return _error(USE_MSG);
 
     n = u64_parse_cstr(argv[1]);

@@ -29,6 +29,7 @@ u64 math_gcd(u64 x, u64 y);
 u64 math_lcm(u64 x, u64 y);
 u64 math_pow(u64 base, u64 exp);
 Vec math_divisors(u64 x);
+Vec math_divisors_sorted(u64 x);
 Vec math_prime_divisors(u64 x);
 u64 math_prime_divisor_power(u64 x, u64 p);
 Vec math_prime_divisor_pairs(u64 x);

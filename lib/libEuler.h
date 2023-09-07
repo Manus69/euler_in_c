@@ -17,5 +17,6 @@
 #include "./src/math.h"
 #include "./src/Pair.h"
 #include "./src/Tbl.h"
+#include "./src/Deck.h"
 
 #endif

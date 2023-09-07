@@ -112,5 +112,21 @@ void _Pair_typed_test()
     printf("%ld %ld\n", x.left, x.right);
 
     Vec_del(& v);
+}
 
+void _Deck_test(i64 n)
+{
+    Deck d = Deck_new(i64);
+    for (i64 k = 0; k < n; k ++)
+    {
+        Deck_push_right(& d, k, i64);
+        Deck_push_left(& d, k, i64);
+    }
+
+    // Deck_map(d, (F) i64_dbgf);
+    i64_dbgf(Deck_first(d));
+    nl;
+    i64_dbgf(Deck_last(d));
+
+    Deck_del(& d);
 }

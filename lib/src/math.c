@@ -1,4 +1,6 @@
 #include "math.h"
+#include "sort.h"
+#include "u64.h"
 
 u64 math_log2(u64 x)
 {
@@ -61,12 +63,26 @@ Vec math_divisors(u64 x)
 
     if (x == 1) return vec;
 
-    for (u64 k = 2; k <= x / 2; k ++)
+    for (u64 k = 2; k * k <= x; k ++)
     {
-        if (x % k == 0) Vec_push(& vec, k, u64);
+        if (x % k == 0)
+        {
+            Vec_push(& vec, k, u64);
+            Vec_push(& vec, x / k, u64);
+        }
     }
 
     Vec_push(& vec, x, u64);
+
+    return vec;
+}
+
+Vec math_divisors_sorted(u64 x)
+{
+    Vec vec;
+
+    vec = math_divisors(x);
+    sort_quick(Vec_to_view(vec), u64);
 
     return vec;
 }

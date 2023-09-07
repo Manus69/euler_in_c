@@ -10,9 +10,6 @@ void p_12(void)
     {
         n = math_arith_prog_sum(x);
         divisors = math_divisors(n);
-
-        // Vec_map(divisors, (F) u64_dbgf);
-        // nl;
     
         if (Vec_len(divisors) > N) break;
         Vec_del(& divisors);
