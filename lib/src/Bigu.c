@@ -180,6 +180,7 @@ static i64 _mult(u64 * restrict buff, const u64 * lhs, i64 lhs_len, const u64 * 
     i64 len;
     i64 k;
 
+    len = 0;
     for (k = 0; k < rhs_len; k ++)
     {
         len = _scale_buf(scratch, lhs, lhs_len, rhs[k]);
