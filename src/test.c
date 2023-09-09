@@ -142,18 +142,18 @@ void _Bigu_test()
 
     mem_vmap((F) Bigu_del, & x, & y, & z);
 
-    // x = Bigu_from_cstr("1488");
-    // Bigu_dbg(x);
+    x = Bigu_from_cstr("1001");
+    Bigu_dbg(x);
 
-    // y = Bigu_from_cstr("69");
-    // Bigu_dbg(y);
+    y = Bigu_from_cstr("69");
+    Bigu_dbg(y);
 
-    // z = Bigu_mult(x, y);
-    // Bigu_dbg(z);
+    z = Bigu_mult(x, y);
+    Bigu_dbg(z);
 
-    // mem_vmap((F) Bigu_del, & x, & y, & z);
+    mem_vmap((F) Bigu_del, & x, & y, & z);
 
-    Str s = Str_repeat_cstr("9", 1000);
+    Str s = Str_repeat_cstr("9", 3000);
     x = Bigu_from_cstr(Str_first(s));
     y = Bigu_from_cstr(Str_first(s));
     Bigu_dbg(y);

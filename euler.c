@@ -27,6 +27,7 @@ static const fptr call_table[N_PROBLEMS] =
     p_10,
     p_11,
     p_12,
+    p_13,
 };
 
 static inline int _error(const byte * msg)
@@ -37,7 +38,7 @@ static inline int _error(const byte * msg)
 static inline int _test()
 {
     _Bigu_test();
-    
+
     return 0;
 }
 
