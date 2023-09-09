@@ -2,9 +2,25 @@
 #include "sort.h"
 #include "u64.h"
 
+#define LOG10_2 (0.301)
+
 u64 math_log2(u64 x)
 {
     return sizeof(x) * __CHAR_BIT__ - __builtin_clzl(x) - 1; 
+}
+
+u64 math_log10(u64 x)
+{
+    u64 log;
+
+    log = 0;
+    while (x / 10)
+    {
+        log ++;
+        x /= 10;
+    }
+
+    return log;
 }
 
 u64 math_arith_prog_sum(u64 n)

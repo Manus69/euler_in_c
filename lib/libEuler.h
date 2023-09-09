@@ -18,5 +18,6 @@
 #include "./src/Pair.h"
 #include "./src/Tbl.h"
 #include "./src/Deck.h"
+#include "./src/BigInt.h"
 
 #endif

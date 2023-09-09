@@ -32,11 +32,13 @@ struct Deck
     Deck_set(* deck_ptr, 0, item, type); \
 }
 
+Deck    Deck_own(void * data, i64 item_size, i64 idx, i64 len, i64 capacity);
 Deck    Deck_new_capacity(i64 capacity, i64 item_size);
 Deck    Deck_new_item_size(i64 item_size);
 void    Deck_del(Deck * deck);
 i64     Deck_item_size(Deck deck);
 i64     Deck_len(Deck deck);
+bool    Deck_empty(Deck deck);
 i64     Deck_size_allocated(Deck deck);
 i64     Deck_size_data(Deck deck);
 i64     Deck_capacity_left(Deck deck);
@@ -50,6 +52,9 @@ void    Deck_extend_right(Deck * deck, i64 len);
 void    Deck_extend_left(Deck * deck, i64 len);
 void    Deck_double_right(Deck * deck);
 void    Deck_double_left(Deck * deck);
+void    Deck_reserve_right(Deck * deck, i64 len);
+void    Deck_reserve_right_agro(Deck * deck, i64 len);
+void    Deck_right_buffer_memset0(Deck deck);
 View    Deck_view(Deck deck, i64 idx, i64 len);
 View    Deck_to_View(Deck deck);
 void    Deck_map(Deck deck, F f);

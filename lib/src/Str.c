@@ -203,6 +203,21 @@ void Str_replace_cstr_in_situ(Str * str, const byte * what, const byte * to)
     * str = new;
 }
 
+Str Str_repeat_cstr_len(const byte * cstr, i64 len, i64 count)
+{
+    Str str;
+
+    str = Str_new_capacity(len * count);
+    for (i64 k = 0; k < count; k ++) Str_append_cstr_len(& str, cstr, len);
+
+    return str;
+}
+
+Str Str_repeat_cstr(const byte * cstr, i64 count)
+{
+    return Str_repeat_cstr_len(cstr, strlen(cstr), count);
+}
+
 void Str_dbg(Str str)
 {
     printf("%s ", str.cstr);

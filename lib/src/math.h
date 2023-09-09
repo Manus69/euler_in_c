@@ -23,6 +23,7 @@ math_addf_gen(i64)
 math_addf_gen(u64)
 
 u64 math_log2(u64 x);
+u64 math_log10(u64 x);
 u64 math_arith_prog_sum(u64 n);
 u64 math_factorial(u64 n);
 u64 math_gcd(u64 x, u64 y);

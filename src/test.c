@@ -123,10 +123,45 @@ void _Deck_test(i64 n)
         Deck_push_left(& d, k, i64);
     }
 
+    sort_quick(Deck_to_View(d), i64);
     // Deck_map(d, (F) i64_dbgf);
-    i64_dbgf(Deck_first(d));
-    nl;
     i64_dbgf(Deck_last(d));
 
     Deck_del(& d);
+}
+
+void _Bigu_test()
+{
+    Bigu x, y, z;
+
+    x = Bigu_new(999);
+    y = Bigu_new(9);
+    z = Bigu_mult(x, y);
+
+    Bigu_dbg(z);
+
+    mem_vmap((F) Bigu_del, & x, & y, & z);
+
+    // x = Bigu_from_cstr("1488");
+    // Bigu_dbg(x);
+
+    // y = Bigu_from_cstr("69");
+    // Bigu_dbg(y);
+
+    // z = Bigu_mult(x, y);
+    // Bigu_dbg(z);
+
+    // mem_vmap((F) Bigu_del, & x, & y, & z);
+
+    Str s = Str_repeat_cstr("9", 1000);
+    x = Bigu_from_cstr(Str_first(s));
+    y = Bigu_from_cstr(Str_first(s));
+    Bigu_dbg(y);
+
+    z = Bigu_mult(x, y);
+    Bigu_dbg(z);
+
+    Str_del(& s);
+    mem_vmap((F) Bigu_del, & x, & y, & z);
+
 }

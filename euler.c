@@ -36,8 +36,8 @@ static inline int _error(const byte * msg)
 
 static inline int _test()
 {
-    _Deck_test(1000);
-
+    _Bigu_test();
+    
     return 0;
 }
 

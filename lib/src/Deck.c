@@ -4,6 +4,18 @@
 
 #define DECK_DC 1 << 4
 
+Deck Deck_own(void * data, i64 item_size, i64 idx, i64 len, i64 capacity)
+{
+    return (Deck)
+    {
+        .data = data,
+        .item_size = item_size,
+        .idx = idx,
+        .len = len,
+        .capacity = capacity,
+    };
+}
+
 Deck Deck_new_capacity(i64 capacity, i64 item_size)
 {
     return (Deck)
@@ -35,6 +47,11 @@ i64 Deck_item_size(Deck deck)
 i64 Deck_len(Deck deck)
 {
     return deck.len;
+}
+
+bool Deck_empty(Deck deck)
+{
+    return deck.len == 0;
 }
 
 i64 Deck_size_allocated(Deck deck)
@@ -83,6 +100,7 @@ void * Deck_pop_left(Deck * deck)
 
     ptr = Deck_first(* deck);
     deck->idx ++;
+    deck->len --;
 
     return ptr;
 }
@@ -100,6 +118,20 @@ void Deck_extend_left(Deck * deck, i64 len)
     deck->idx += len;
 }
 
+void Deck_reserve_right(Deck * deck, i64 len)
+{
+    if (Deck_len(* deck) < len) Deck_extend_right(deck, len);
+}
+
+void Deck_reserve_right_agro(Deck * deck, i64 len)
+{
+    if (Deck_len(* deck) < len)
+    {
+        len = len < deck->len ? deck->len : len;
+        Deck_extend_right(deck, len);
+    }
+}
+
 void Deck_double_right(Deck * deck)
 {
     Deck_extend_right(deck, deck->len);
@@ -108,6 +140,11 @@ void Deck_double_right(Deck * deck)
 void Deck_double_left(Deck * deck)
 {
     Deck_extend_left(deck, deck->len);
+}
+
+void Deck_right_buffer_memset0(Deck deck)
+{
+    memset(Deck_get(deck, deck.len), 0, Deck_capacity_right(deck) * deck.item_size);
 }
 
 View Deck_view(Deck deck, i64 idx, i64 len)

@@ -93,6 +93,8 @@ Str             StrSlc_replace_cstr(StrSlc slc, const byte * what, const byte * 
 Str             Str_replace_cstr_len(Str str, const byte * what, i64 w_len, const byte * to, i64 t_len);
 Str             Str_replace_cstr(Str str, const byte * what, const byte * to);
 void            Str_replace_cstr_in_situ(Str * str, const byte * what, const byte * to);
+Str             Str_repeat_cstr_len(const byte * cstr, i64 len, i64 count);
+Str             Str_repeat_cstr(const byte * cstr, i64 count);
 void            Str_rev(Str str);
 void            Str_dbg(Str str);
 void            Str_dbgf(const void * str);

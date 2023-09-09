@@ -37,6 +37,16 @@ i64 mem_extend(void ** ptr, i64 size, i64 extra_size)
     return mem_resize(ptr, size + extra_size);
 }
 
+i64 mem_extend0(void ** ptr, i64 size, i64 extra_size)
+{
+    i64 new_size;
+
+    new_size = mem_extend(ptr, size, extra_size);
+    memset((* ptr) + size, 0, extra_size);
+
+    return new_size;
+}
+
 void mem_arr_map(void (* f)(void *), void * arr[])
 {
     void * current;
