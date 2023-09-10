@@ -28,6 +28,31 @@ u64 math_arith_prog_sum(u64 n)
     return ((n + 1) * n) / 2;
 }
 
+bool math_is_nat(double x)
+{
+    return (u64) x == x;
+}
+
+u64 math_is_square(u64 x)
+{
+    double root;
+
+    root = math_sqrt(x);
+    if (math_is_nat(root)) return (u64) root;
+
+    return 0;
+}
+
+u64 math_is_triangular(u64 n)
+{
+    double root;
+
+    root = math_sqrt(1 + 8 * n);
+    if (math_is_nat(root)) return (-1 + (u64) root) / 2;
+
+    return 0;
+}
+
 u64 math_factorial(u64 n)
 {
     u64 nf;
@@ -160,4 +185,9 @@ Vec math_prime_divisor_pairs(u64 x)
     }
 
     return vec;
+}
+
+double quadratic_root_plus(double a, double b, double c)
+{
+
 }

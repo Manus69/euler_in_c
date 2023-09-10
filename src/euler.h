@@ -13,5 +13,6 @@ void _Pair_test();
 void _Pair_typed_test();
 void _Deck_test(i64 n);
 void _Bigu_test();
+void _sqrt_test();
 
 #endif

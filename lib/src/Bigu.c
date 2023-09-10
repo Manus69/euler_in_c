@@ -202,6 +202,30 @@ Bigu Bigu_mult(Bigu lhs, Bigu rhs)
     return result;
 }
 
+Bigu Bigu_pow(Bigu base, u64 pow)
+{
+    Bigu partial;
+    Bigu result;
+
+    if (pow == 0) return Bigu_new(1);
+    if (pow == 1) return Bigu_dup(base);
+
+    if (pow % 2)
+    {
+        partial = Bigu_pow(base, pow - 1);
+        result = Bigu_mult(partial, base);
+        Bigu_del(& partial);
+
+        return result;
+    }
+
+    partial = Bigu_pow(base, pow / 2);
+    result = Bigu_mult(partial, partial);
+    Bigu_del(& partial);
+
+    return result;
+}
+
 void Bigu_plus_u64(Bigu * lhs, u64 rhs)
 {
     i64 len;
@@ -274,6 +298,24 @@ Bigu Bigu_from_StrSlc(StrSlc slc)
 Bigu Bigu_from_StrSlc_ptr(const StrSlc * slc)
 {
     return Bigu_from_StrSlc(* slc);
+}
+
+Str Bigu_to_Str(Bigu bigu)
+{
+    byte    buffer[math_log10(BASE) * bigu.len];
+    i64     digit;
+    i64     k;
+
+    digit = bigu.len - 1;
+    k = sprintf(buffer, "%zu", bigu.digits[digit]);
+    digit --;
+
+    for ( ; digit >= 0; digit --)
+    {
+        k = k + sprintf(buffer + k, "%0*zu", (int) math_log10(BASE), bigu.digits[digit]);
+    }
+
+    return Str_from_cstr_len(buffer, k);
 }
 
 void Bigu_dbg(Bigu bigu)

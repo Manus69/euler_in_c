@@ -165,3 +165,13 @@ void _Bigu_test()
     mem_vmap((F) Bigu_del, & x, & y, & z);
 
 }
+
+void _sqrt_test()
+{
+    i64 n = 100;
+    for (i64 k = 0; k < n; k ++)
+    {
+        double x = math_sqrt(k);
+        printf("%ld %f\n", k, x);
+    }
+}

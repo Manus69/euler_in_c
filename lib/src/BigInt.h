@@ -21,6 +21,7 @@ void    Bigu_del(Bigu * bigu);
 i64     Bigu_cmp(Bigu lhs, Bigu rhs);
 i64     Bigu_cmpf(const void * lhs, const void * rhs);
 Bigu    Bigu_mult(Bigu lhs, Bigu rhs);
+Bigu    Bigu_pow(Bigu base, u64 pow);
 void    Bigu_plus_u64(Bigu * lhs, u64 rhs);
 void    Bigu_plus(Bigu * lhs, Bigu rhs);
 Bigu    Bigu_add(Bigu lhs, Bigu rhs);
@@ -29,6 +30,7 @@ Bigu    Bigu_from_cstr_len(const byte * cstr, i64 len);
 Bigu    Bigu_from_cstr(const byte * cstr);
 Bigu    Bigu_from_StrSlc(StrSlc slc);
 Bigu    Bigu_from_StrSlc_ptr(const StrSlc * slc);
+Str     Bigu_to_Str(Bigu bigu);
 void    Bigu_dbg(Bigu bigu);
 void    Bigu_dbgf(const void * bigu);
 
