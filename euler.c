@@ -42,7 +42,8 @@ static inline int _error(const byte * msg)
 
 static inline int _test()
 {
-    _sqrt_test();
+    i64 x = math_is_triangular(120);
+    i64_dbg(x);
     
     return 0;
 }

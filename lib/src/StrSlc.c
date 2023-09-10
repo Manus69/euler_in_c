@@ -187,9 +187,10 @@ void StrSlc_trim_back_ws(StrSlc * slc)
     i64 len;
 
     len = 0;
-    for (idx = slc->len - 1; idx >= 0; idx ++)
+    for (idx = slc->len - 1; idx >= 0; idx --)
     {
-        if (byte_is_ws(slc->cstr[idx])) len ++;
+        if (! byte_is_ws(slc->cstr[idx])) break;
+        len ++;
     }
 
     StrSlc_shrink(slc, len);

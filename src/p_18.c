@@ -1,7 +1,7 @@
 #include "euler.h"
 #include <assert.h>
 
-static const byte * small_t = "3\n7 4\n2 4 6\n8 5 9 3";
+// static const byte * small_t = "3\n7 4\n2 4 6\n8 5 9 3";
 
 typedef struct
 {
@@ -38,6 +38,8 @@ _T _new(Str * str)
 
     Str_replace_cstr_in_situ(str, "\n", " ");
     slc = Str_to_slice(* str);
+    StrSlc_trim_back_ws(& slc);
+
     vec = Vec_new(u8);
 
     while (StrSlc_empty(slc) == false)
@@ -51,6 +53,19 @@ _T _new(Str * str)
     return (_T) {vec, n};
 }
 
+_T _from_file(const byte * name)
+{
+    Str str;
+    _T  t;
+
+    str = io_read_file(name);
+    t = _new(& str);
+    Str_del(& str);
+
+    return t;
+}
+
+#define FILE "./src/p_18.txt"
 #define N 100
 static u64 path_table[N][N];
 
@@ -61,18 +76,30 @@ static u64 _compute_path(_T t, i64 row, i64 col)
 
     if (path_table[row][col]) return path_table[row][col];
 
+    if (row == t.n - 1)
+    {
+        path_table[row][col] = deref(u8) _T_get(t, row, col);
+
+        return path_table[row][col];
+    }
+
+    lhs = _compute_path(t, row + 1, col);
+    rhs = _compute_path(t, row + 1, col + 1);
+
+    path_table[row][col] = max(lhs, rhs) + deref(u8) _T_get(t, row, col);
+
+    return path_table[row][col];
 }
 
 void p_18(void)
 {
-    Str t_str;
     _T  t;
+    u64 path;
 
-    t_str = Str_from_cstr(small_t);
-    t = _new(& t_str);
 
-    Vec_map(t.cells, (F) u8_dbgf);
+    t = _from_file(FILE);
+    path = _compute_path(t, 0, 0);
+    u64_dbg(path);
 
-    Str_del(& t_str);
     Vec_del(& t.cells);
 }

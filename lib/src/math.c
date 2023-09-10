@@ -2,7 +2,8 @@
 #include "sort.h"
 #include "u64.h"
 
-#define LOG10_2 (0.301)
+#define LOG10_2 0.301
+#define EPS     1e-10
 
 u64 math_log2(u64 x)
 {
@@ -30,7 +31,11 @@ u64 math_arith_prog_sum(u64 n)
 
 bool math_is_nat(double x)
 {
-    return (u64) x == x;
+    double diff;
+
+    diff = double_abs(x - (u64) x);
+
+    return diff < EPS;
 }
 
 u64 math_is_square(u64 x)
