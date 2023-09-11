@@ -1,6 +1,7 @@
 #include "math.h"
 #include "sort.h"
 #include "u64.h"
+#include <math.h>
 
 #define LOG10_2 0.301
 #define EPS     1e-10
@@ -194,5 +195,9 @@ Vec math_prime_divisor_pairs(u64 x)
 
 double quadratic_root_plus(double a, double b, double c)
 {
+    double d;
 
+    if ((d = b * b - 4 * a * c) < 0) return NAN;
+    
+    return (- b + math_sqrt(d)) / (2 * a);
 }

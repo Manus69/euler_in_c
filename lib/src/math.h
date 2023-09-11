@@ -34,6 +34,7 @@ u64 math_log2(u64 x);
 u64 math_log10(u64 x);
 u64 math_arith_prog_sum(u64 n);
 bool math_is_nat(double x);
+double quadratic_root_plus(double a, double b, double c);
 u64 math_is_square(u64 x);
 u64 math_is_triangular(u64 n);
 u64 math_factorial(u64 n);

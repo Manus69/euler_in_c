@@ -4,6 +4,9 @@
 #include "../lib/libEuler.h"
 #include <stdio.h>
 
+u64 sum_digits_len(const byte * cstr, i64 len);
+u64 sum_digits(const byte * cstr);
+
 void _i64_test(i64 n);
 void _Str_test();
 void _Bfd_test();

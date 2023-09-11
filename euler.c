@@ -33,6 +33,9 @@ static const fptr call_table[N_PROBLEMS] =
     p_16,
     NULL,
     p_18,
+    NULL,
+    p_20,
+    p_21,
 };
 
 static inline int _error(const byte * msg)
@@ -42,9 +45,10 @@ static inline int _error(const byte * msg)
 
 static inline int _test()
 {
-    i64 x = math_is_triangular(120);
-    i64_dbg(x);
-    
+    Bigu x = Bigu_factorial(100);
+    Bigu_dbg(x);
+    Bigu_del(& x);
+
     return 0;
 }
 

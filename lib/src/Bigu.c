@@ -226,6 +226,19 @@ Bigu Bigu_pow(Bigu base, u64 pow)
     return result;
 }
 
+Bigu Bigu_factorial(u64 n)
+{
+    Bigu product;
+
+    product = Bigu_new(1);
+    for (u64 k = 2; k <= n; k ++)
+    {
+        Bigu_scale(& product, k);
+    }
+
+    return product;
+}
+
 void Bigu_plus_u64(Bigu * lhs, u64 rhs)
 {
     i64 len;

@@ -22,6 +22,7 @@ i64     Bigu_cmp(Bigu lhs, Bigu rhs);
 i64     Bigu_cmpf(const void * lhs, const void * rhs);
 Bigu    Bigu_mult(Bigu lhs, Bigu rhs);
 Bigu    Bigu_pow(Bigu base, u64 pow);
+Bigu    Bigu_factorial(u64 n);
 void    Bigu_plus_u64(Bigu * lhs, u64 rhs);
 void    Bigu_plus(Bigu * lhs, Bigu rhs);
 Bigu    Bigu_add(Bigu lhs, Bigu rhs);
