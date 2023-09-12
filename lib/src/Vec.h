@@ -5,8 +5,6 @@
 #include "macro.h"
 #include "View.h"
 
-#define Vec_new(type) Vec_new_item_size(sizeof(type))
-
 typedef struct Vec Vec;
 
 struct Vec
@@ -30,12 +28,16 @@ i64     Vec_max_idx(Vec vec, Cmpf cmp);
 void *  Vec_get(Vec vec, i64 idx);
 void *  Vec_first(Vec vec);
 void *  Vec_last(Vec vec);
+void *  Vec_pop(Vec * vec);
 void    Vec_extend(Vec * vec, i64 len);
 void    Vec_double(Vec * vec);
+void    Vec_reserve(Vec * vec, i64 capacity);
 void    Vec_map(Vec vec, F f);
 void    Vec_fold(void * target, Vec vec, Putf op);
 View    Vec_view(Vec vec, i64 idx, i64 len);
 View    Vec_to_view(Vec vec);
+
+#define Vec_new(type) Vec_new_item_size(sizeof(type))
 
 #define Vec_push(vec_ptr, item, type) \
 { \

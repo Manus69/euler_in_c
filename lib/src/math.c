@@ -104,13 +104,14 @@ u64 math_pow(u64 base, u64 exp)
 Vec math_divisors(u64 x)
 {
     Vec vec;
+    u64 k;
 
     vec = Vec_new(u64);
     Vec_push(& vec, 1, u64);
 
     if (x == 1) return vec;
 
-    for (u64 k = 2; k * k <= x; k ++)
+    for (k = 2; k * k < x; k ++)
     {
         if (x % k == 0)
         {
@@ -119,9 +120,21 @@ Vec math_divisors(u64 x)
         }
     }
 
+    if (k * k == x) Vec_push(& vec, k, u64);
+
     Vec_push(& vec, x, u64);
 
     return vec;
+}
+
+Vec math_divisors_proper(u64 x)
+{
+    Vec divisors;
+
+    divisors = math_divisors(x);
+    Vec_pop(& divisors);
+
+    return divisors;
 }
 
 Vec math_divisors_sorted(u64 x)

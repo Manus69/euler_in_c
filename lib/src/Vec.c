@@ -56,6 +56,11 @@ void * Vec_last(Vec vec)
     return Vec_get(vec, vec.idx - 1);
 }
 
+void * Vec_pop(Vec * vec)
+{
+    return Vec_get(* vec, -- vec->idx);
+}
+
 void Vec_extend(Vec * vec, i64 len)
 {
     mem_extend(& vec->data, Vec_allocated_size(* vec), len * vec->item_size);
@@ -65,6 +70,11 @@ void Vec_extend(Vec * vec, i64 len)
 void Vec_double(Vec * vec)
 {
     Vec_extend(vec, vec->capacity);
+}
+
+void Vec_reserve(Vec * vec, i64 capacity)
+{
+    if (Vec_capacity(* vec) < capacity) Vec_extend(vec, capacity);
 }
 
 View Vec_view(Vec vec, i64 idx, i64 len)
