@@ -16,7 +16,7 @@ u64 math_log10(u64 x)
     u64 log;
 
     log = 0;
-    while (x / 10)
+    while (x >= 10)
     {
         log ++;
         x /= 10;

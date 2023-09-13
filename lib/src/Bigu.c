@@ -65,6 +65,15 @@ i64 Bigu_cmpf(const void * lhs, const void * rhs)
     return Bigu_cmp(deref(Bigu) lhs, deref(Bigu) rhs);
 }
 
+i64 Bigu_n_decimal_digits(Bigu bigu)
+{
+    u64 n_digits;
+
+    n_digits = 1 + math_log10(bigu.digits[bigu.len - 1]);
+
+    return n_digits + (bigu.len - 1) * (math_log10(BASE));
+}
+
 static inline void _to0(Bigu * bigu)
 {
     bigu->digits[0] = 0;

@@ -20,6 +20,7 @@ Bigu    Bigu_dup(Bigu bigu);
 void    Bigu_del(Bigu * bigu);
 i64     Bigu_cmp(Bigu lhs, Bigu rhs);
 i64     Bigu_cmpf(const void * lhs, const void * rhs);
+i64     Bigu_n_decimal_digits(Bigu bigu);
 Bigu    Bigu_mult(Bigu lhs, Bigu rhs);
 Bigu    Bigu_pow(Bigu base, u64 pow);
 Bigu    Bigu_factorial(u64 n);
