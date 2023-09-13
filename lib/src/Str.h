@@ -62,6 +62,7 @@ void            StrSlc_trim_back_cstr(StrSlc * slc, const byte * cstr);
 void            StrSlc_trim_back_ws(StrSlc * slc);
 StrSlc          StrSlc_split_next(StrSlc * slc, byte x);
 Vec             StrSlc_split(StrSlc slc, byte x);
+STATUS          Str_next_perm(Str str);
 void            StrSlc_dbg(StrSlc slc);
 void            StrSlc_dbgf(const void * slc);
 

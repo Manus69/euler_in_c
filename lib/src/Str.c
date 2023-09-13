@@ -218,6 +218,11 @@ Str Str_repeat_cstr(const byte * cstr, i64 count)
     return Str_repeat_cstr_len(cstr, strlen(cstr), count);
 }
 
+STATUS Str_next_perm(Str str)
+{
+    return cstr_next_perm_len(str.cstr, str.idx);
+}
+
 void Str_dbg(Str str)
 {
     printf("%s ", str.cstr);

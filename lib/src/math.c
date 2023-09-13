@@ -206,6 +206,18 @@ Vec math_prime_divisor_pairs(u64 x)
     return vec;
 }
 
+u64 math_n_choose_k(u64 n, u64 k)
+{
+    u64 nk;
+
+    if (unlikely(n < k)) return 0;
+
+    nk = 1;
+    for (u64 w = n; w > n - k; w --) nk *= w;
+
+    return nk;
+}
+
 double quadratic_root_plus(double a, double b, double c)
 {
     double d;

@@ -3,6 +3,9 @@
 
 #include "def.h"
 
+Swap_gen(byte)
+Cmp_gen(byte)
+
 bool byte_is_numeric(byte x);
 bool byte_is_lower(byte x);
 bool byte_is_upper(byte x);

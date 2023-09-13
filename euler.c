@@ -38,6 +38,7 @@ static const fptr call_table[N_PROBLEMS] =
     p_21,
     p_22,
     p_23,
+    p_24,
 };
 
 static inline int _error(const byte * msg)
@@ -47,10 +48,18 @@ static inline int _error(const byte * msg)
 
 static inline int _test()
 {
-    Bigu x = Bigu_factorial(100);
-    Bigu_dbg(x);
-    Bigu_del(& x);
+    Str str = Str_from_cstr("0123");
 
+    Str_dbg(str);
+    nl;
+
+    while (Str_next_perm(str) == STATUS_NOT_OK)
+    {
+        Str_dbg(str);
+        nl;
+    }
+
+    Str_del(& str);
     return 0;
 }
 

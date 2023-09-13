@@ -42,6 +42,7 @@ u64     math_factorial(u64 n);
 u64     math_gcd(u64 x, u64 y);
 u64     math_lcm(u64 x, u64 y);
 u64     math_pow(u64 base, u64 exp);
+u64     math_n_choose_k(u64 n, u64 k);
 Vec     math_divisors(u64 x);
 Vec     math_divisors_proper(u64 x);
 Vec     math_divisors_sorted(u64 x);
