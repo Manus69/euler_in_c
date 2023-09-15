@@ -77,6 +77,12 @@ void Vec_reserve(Vec * vec, i64 capacity)
     if (Vec_capacity(* vec) < capacity) Vec_extend(vec, capacity);
 }
 
+void Vec_pushf(Vec * restrict vec, const void * restrict item, Putf put)
+{
+    if (unlikely(Vec_capacity(* vec) == 0)) Vec_double(vec);
+    put(Vec_get(* vec, vec->idx ++), item);
+}
+
 View Vec_view(Vec vec, i64 idx, i64 len)
 {
     return View_init(Vec_get(vec, idx), vec.item_size, len);
@@ -100,4 +106,9 @@ void Vec_map(Vec vec, F f)
 void Vec_fold(void * target, Vec vec, Putf op)
 {
     View_fold(target, Vec_to_view(vec), op);
+}
+
+i64 Vec_find(Vec vec, const void * item, Cmpf cmp)
+{
+    return View_find(Vec_to_view(vec), item, cmp);
 }

@@ -29,6 +29,7 @@ void *  Vec_get(Vec vec, i64 idx);
 void *  Vec_first(Vec vec);
 void *  Vec_last(Vec vec);
 void *  Vec_pop(Vec * vec);
+void    Vec_pushf(Vec * restrict vec, const void * restrict item, Putf put);
 void    Vec_extend(Vec * vec, i64 len);
 void    Vec_double(Vec * vec);
 void    Vec_reserve(Vec * vec, i64 capacity);
@@ -36,6 +37,7 @@ void    Vec_map(Vec vec, F f);
 void    Vec_fold(void * target, Vec vec, Putf op);
 View    Vec_view(Vec vec, i64 idx, i64 len);
 View    Vec_to_view(Vec vec);
+i64     Vec_find(Vec vec, const void * item, Cmpf cmp);
 
 #define Vec_new(type) Vec_new_item_size(sizeof(type))
 

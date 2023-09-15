@@ -1,5 +1,6 @@
 #include "Rat.h"
 #include "math.h"
+#include "i64.h"
 #include <assert.h>
 #include <stdio.h>
 
@@ -15,6 +16,27 @@ Rat Rat_init(i64 top, u64 bot)
         .top = top / gcd,
         .bot = bot / gcd,
     };
+}
+
+bool Rat_eq(Rat lhs, Rat rhs)
+{
+    return lhs.top == rhs.top && lhs.bot == rhs.bot;
+}
+
+i64 Rat_cmp(Rat lhs, Rat rhs)
+{
+    Rat _lhs;
+    Rat _rhs;
+
+    _lhs = Rat_init(lhs.top * rhs.bot, lhs.bot * rhs.bot);
+    _rhs = Rat_init(rhs.top * lhs.bot, rhs.bot * lhs.bot);
+
+    return i64_cmp(_lhs.top, _rhs.top);
+}
+
+i64 Rat_cmpf(const void * lhs, const void * rhs)
+{
+    return Rat_cmp(deref(Rat) lhs, deref(Rat) rhs);
 }
 
 Rat Rat_add(Rat lhs, Rat rhs)

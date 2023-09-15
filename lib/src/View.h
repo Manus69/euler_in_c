@@ -28,5 +28,6 @@ View    View_view_from(View view, i64 idx);
 i64     View_max_idx(View view, Cmpf cmp);
 void    View_map(View view, F f);
 void    View_fold(void * target, View view, Putf op);
+i64     View_find(View view, const void * item, Cmpf cmp);
 
 #endif

@@ -96,25 +96,24 @@ STATUS cstr_next_perm_len(byte * cstr, i64 len)
     STATUS  status;
     i64     idx;
 
-    if (len < 2) return STATUS_OK;
-    if (len == 2 && cstr[0] >= cstr[1]) return STATUS_OK;
+    if (len < 2) return STATUS_DONE;
+    if (len == 2 && cstr[0] >= cstr[1]) return STATUS_DONE;
     if (len == 2)
     {
         swap_ptr(cstr, cstr + 1, byte);
-        return STATUS_NOT_OK;
+        return STATUS_OK;
     }
 
     status = cstr_next_perm_len(cstr + 1, len - 1);
-    if (status == STATUS_OK)
+    if (status == STATUS_DONE)
     {
-        if (cstr[0] >= cstr[1]) return STATUS_OK;
-        if ((idx = _find_first_greater(cstr + 1, len - 1, cstr[0])) == NO_IDX) return STATUS_OK;
+        if (cstr[0] >= cstr[1]) return STATUS_DONE;
+        if ((idx = _find_first_greater(cstr + 1, len - 1, cstr[0])) == NO_IDX) return STATUS_DONE;
 
         swap_ptr(cstr, cstr + idx + 1, byte);
-        // cstr_sort_insert(cstr + 1, len - 1);
         cstr_rev_len(cstr + 1, len - 1);
 
-        return STATUS_NOT_OK;
+        return STATUS_OK;
     }
 
     return status;

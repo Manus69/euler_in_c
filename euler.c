@@ -40,6 +40,7 @@ static const fptr call_table[N_PROBLEMS] =
     p_23,
     p_24,
     p_25,
+    p_26,
 };
 
 static inline int _error(const byte * msg)
@@ -49,17 +50,6 @@ static inline int _error(const byte * msg)
 
 static inline int _test()
 {
-    // Bigu x = Bigu_new(1);
-    // for (i64 k = 2; k < 20; k ++)
-    // {
-    //     Bigu_scale(& x, k);
-    //     Bigu_dbg(x);
-    //     i64_dbg(Bigu_n_decimal_digits(x));
-    //     nl;
-    // }
-
-    // Bigu_del(& x);
-
     Bigu x = Bigu_from_cstr("3628800");
     i64 k = Bigu_n_decimal_digits(x);
     i64_dbg(k);

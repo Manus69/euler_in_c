@@ -19,5 +19,6 @@
 #include "./src/Tbl.h"
 #include "./src/Deck.h"
 #include "./src/BigInt.h"
+#include "./src/Rat.h"
 
 #endif

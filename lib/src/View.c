@@ -78,3 +78,13 @@ void View_fold(void * target, View view, Putf op)
 {
     mem_raw_fold(target, View_first(view), op, View_size(view), view.item_size);
 }
+
+i64 View_find(View view, const void * item, Cmpf cmp)
+{
+    for (i64 k = 0; k < View_len(view); k ++)
+    {
+        if (cmp(View_get(view, k), item) == 0) return k;
+    }
+
+    return NO_IDX;
+}
