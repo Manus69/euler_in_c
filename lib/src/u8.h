@@ -7,8 +7,10 @@
 Putf_gen(u8)
 Swapf_gen(u8)
 
-void u8_to_bin_buff_le(byte * buff, u8 x);
-void u8_dbg(u8 x);
-void u8_dbgf(const void * x);
+i64     u8_cmp(u8 lhs, u8 rhs);
+i64     u8_cmpf(const void * lhs, const void * rhs);
+void    u8_to_bin_buff_le(byte * buff, u8 x);
+void    u8_dbg(u8 x);
+void    u8_dbgf(const void * x);
 
 #endif

@@ -6,6 +6,7 @@
 #include "./src/i64.h"
 #include "./src/u64.h"
 #include "./src/u8.h"
+#include "./src/cstr.h"
 #include "./src/Slc.h"
 #include "./src/View.h"
 #include "./src/Str.h"

@@ -20,6 +20,26 @@ i64 cstr_cmp(const byte * lhs, const byte * rhs)
     return strcmp(lhs, rhs);
 }
 
+#define HASH_INIT 5381
+#define HASH_F    33
+u64 cstr_hash_djb_len(const byte * cstr, i64 len)
+{
+    u64 hash;
+
+    hash = HASH_INIT;
+    for (i64 k = 0; k < len; k ++)
+    {
+        hash = hash * HASH_F + cstr[k];
+    }
+
+    return hash;
+}
+
+u64 cstr_hash_djb(const byte * cstr)
+{
+    return cstr_hash_djb_len(cstr, strlen(cstr));
+}
+
 i64 cstr_find_c_len(const byte * cstr, i64 len, byte x)
 {
     for (i64 k = 0; k < len; k ++)

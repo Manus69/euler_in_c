@@ -15,7 +15,7 @@ typedef void            (* F)(void *);
 typedef void            (* Putf)(void *, const void *);
 typedef void            (* Swapf)(void *, void *);
 typedef i64             (* Cmpf)(const void *, const void *);
-typedef i64             (* Hashf)(const void * );
+typedef u64             (* Hashf)(const void * );
 
 enum STATUS
 {
