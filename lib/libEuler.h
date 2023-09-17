@@ -21,5 +21,7 @@
 #include "./src/Deck.h"
 #include "./src/BigInt.h"
 #include "./src/Rat.h"
+#include "./src/Htbl.h"
+#include "./src/Set.h"
 
 #endif

@@ -4,6 +4,8 @@
 #include "i64.h"
 #include "u64.h"
 #include "Str.h"
+#include "hash_djb.h"
+
 #include <string.h>
 #include <assert.h>
 #include <stdio.h>
@@ -65,6 +67,24 @@ i64 Bigu_cmpf(const void * lhs, const void * rhs)
     return Bigu_cmp(deref(Bigu) lhs, deref(Bigu) rhs);
 }
 
+u64 Bigu_hash(Bigu bigu)
+{
+    u64 hash;
+
+    hash = HASH_DJB_INIT;
+    for (i64 k = 0; k < bigu.len; k ++)
+    {
+        hash = hash * HASH_DJB_F + bigu.digits[k];
+    }
+
+    return hash;
+}
+
+u64 Bigu_hashf(const void * bigu)
+{
+    return Bigu_hash(deref(Bigu) bigu);
+}
+
 i64 Bigu_n_decimal_digits(Bigu bigu)
 {
     u64 n_digits;
@@ -85,7 +105,7 @@ static inline bool _is0(Bigu bigu)
     return bigu.len == 1 && bigu.digits[0] == 0;
 }
 
-static i64 _capacity(Bigu bigu)
+static inline i64 _capacity(Bigu bigu)
 {
     return bigu.capacity - bigu.len;
 }
@@ -231,6 +251,18 @@ Bigu Bigu_pow(Bigu base, u64 pow)
     partial = Bigu_pow(base, pow / 2);
     result = Bigu_mult(partial, partial);
     Bigu_del(& partial);
+
+    return result;
+}
+
+Bigu Bigu_pow_u64(u64 base, u64 pow)
+{
+    Bigu _base;
+    Bigu result;
+
+    _base = Bigu_new(base);
+    result = Bigu_pow(_base, pow);
+    Bigu_del(& _base);
 
     return result;
 }

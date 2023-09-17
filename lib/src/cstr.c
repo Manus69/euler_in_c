@@ -1,5 +1,6 @@
 #include "def.h"
 #include "math.h"
+#include "hash_djb.h"
 #include <string.h>
 
 i64 cstr_cmp_len(const byte * lhs, i64 lhs_len, const byte * rhs, i64 rhs_len)
@@ -20,16 +21,14 @@ i64 cstr_cmp(const byte * lhs, const byte * rhs)
     return strcmp(lhs, rhs);
 }
 
-#define HASH_INIT 5381
-#define HASH_F    33
 u64 cstr_hash_djb_len(const byte * cstr, i64 len)
 {
     u64 hash;
 
-    hash = HASH_INIT;
+    hash = HASH_DJB_INIT;
     for (i64 k = 0; k < len; k ++)
     {
-        hash = hash * HASH_F + cstr[k];
+        hash = hash * HASH_DJB_F + cstr[k];
     }
 
     return hash;

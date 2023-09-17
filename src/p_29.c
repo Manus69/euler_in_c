@@ -1,6 +1,6 @@
 #include "euler.h"
 
-#define N 5
+#define N 100
 
 typedef struct PowStr PowStr;
 
@@ -95,15 +95,37 @@ PowStr PowStr_new(u64 x, Sieve sieve)
     return _powstr(x, pows);
 }
 
+static void _get_powers(u64 x, Sieve sieve, Htbl * htbl)
+{
+
+}
+
 void p_29(void)
 {
-    Sieve sieve;
+    // Sieve sieve;
+    // Htbl  htbl;
 
-    sieve = Sieve_new(N * N);
-    PowStr ps = PowStr_new(20, sieve);
-    PowStr_dbg(ps);
-    PowStr_del(& ps);
+    // sieve = Sieve_new(N * N);
+    // htbl = Htbl_new_capacity(N * N, sizeof(PowStr));
+
+    
 
 
-    Sieve_del(& sieve);
+    // Sieve_del(& sieve);
+
+    Set set;
+
+    set = Set_new(Bigu);
+
+    for (u64 base = 2; base <= N; base ++)
+    {
+        for (u64 pow = 2; pow <= N; pow ++)
+        {
+            Bigu bu = Bigu_pow_u64(base, pow);
+            Set_include(& set, & bu, Bigu_putf, Bigu_cmpf, Bigu_hashf);
+        }
+    }
+
+    Set_map(set, (F) Bigu_del);
+    Set_del(& set);
 }

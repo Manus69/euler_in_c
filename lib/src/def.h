@@ -22,6 +22,7 @@ enum STATUS
     STATUS_OK,
     STATUS_NOT_OK,
     STATUS_DONE,
+    STATUS_NOT_DONE,
     STATUS_FUCKED,
 };
 
