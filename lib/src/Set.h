@@ -23,8 +23,7 @@ void *  Set_get_hashed(Set set, const void * item, u64 hash, Cmpf cmp);
 void *  Set_get(Set set, const void * item, Cmpf cmp, Hashf hash);
 bool    Set_contains_hashed(Set set, const void * item, u64 hash, Cmpf cmp);
 bool    Set_contains(Set set, const void * item, Cmpf cmp, Hashf hash);
-void    Set_include_hashed(Set * restrict set, const void * restrict item, u64 hash, Putf put, Cmpf cmp);
-void    Set_include(Set * restrict set, const void * restrict item, Putf put, Cmpf cmp, Hashf hash);
+STATUS  Set_include(Set * restrict set, const void * restrict item, Putf put, Cmpf cmp, Hashf hash);
 void    Set_map(Set set, F f);
 
 #endif
