@@ -46,6 +46,8 @@ static const fptr call_table[N_PROBLEMS] =
     p_29,
     p_30,
     p_31,
+    NULL,
+    p_33,
 };
 
 static inline int _error(const byte * msg)

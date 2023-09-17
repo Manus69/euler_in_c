@@ -18,6 +18,16 @@ Rat Rat_init(i64 top, u64 bot)
     };
 }
 
+Rat Rat_one(void)
+{
+    return Rat_init(1, 1);
+}
+
+Rat Rat_zero(void)
+{
+    return Rat_init(0, 1);
+}
+
 bool Rat_eq(Rat lhs, Rat rhs)
 {
     return lhs.top == rhs.top && lhs.bot == rhs.bot;
@@ -79,6 +89,22 @@ Rat Rat_pow(Rat rat, u64 exp)
 double Rat_as_decimal(Rat rat)
 {
     return (double) rat.top / (double) rat.bot;
+}
+
+void Rat_addf(void * lhs, const void * rhs)
+{
+    Rat rat;
+
+    rat = Rat_add(deref(Rat) lhs, deref(Rat) rhs);
+    deref(Rat) lhs = rat;
+}
+
+void Rat_multf(void * lhs, const void * rhs)
+{
+    Rat rat;
+
+    rat = Rat_mult(deref(Rat) lhs, deref(Rat) rhs);
+    deref(Rat) lhs = rat;
 }
 
 void Rat_dbg(Rat rat)
