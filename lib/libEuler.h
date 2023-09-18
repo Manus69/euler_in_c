@@ -23,5 +23,6 @@
 #include "./src/Rat.h"
 #include "./src/Htbl.h"
 #include "./src/Set.h"
+#include "./src/to_Str.h"
 
 #endif
