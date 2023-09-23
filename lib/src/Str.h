@@ -32,6 +32,7 @@ i64             StrSlc_cmpf(const void * lhs, const void * rhs);
 StrSlc          StrSlc_from_cstr_len(const byte * cstr, i64 len);
 StrSlc          StrSlc_from_cstr(const byte * cstr);
 const char *    StrSlc_get(StrSlc slc, i64 idx);
+char            StrSlc_get_c(StrSlc slc, i64 idx);
 const char *    StrSlc_first(StrSlc slc);
 i64             StrSlc_len(StrSlc slc);
 bool            StrSlc_empty(StrSlc slc);

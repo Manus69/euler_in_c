@@ -33,6 +33,11 @@ const char * StrSlc_get(StrSlc slc, i64 idx)
     return slc.cstr + idx;
 }
 
+char StrSlc_get_c(StrSlc slc, i64 idx)
+{
+    return deref(char) StrSlc_get(slc, idx);
+}
+
 const char * StrSlc_first(StrSlc slc)
 {
     return slc.cstr;

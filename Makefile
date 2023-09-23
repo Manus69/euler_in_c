@@ -1,5 +1,5 @@
 cc = gcc
-falgs_base := -std=c2x -Wall -Wextra 
+falgs_base := -std=c2x -Wall -Wextra
 flags_dbg := $(falgs_base) -g -fsanitize=address -fsanitize=undefined
 flags_release := $(falgs_base) -Ofast -flto -pg
 
