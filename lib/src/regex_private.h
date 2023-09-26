@@ -1,13 +1,11 @@
 #ifndef REGEX_PRIVATE_H
 #define REGEX_PRIVATE_H
 
-#include "def.h"
-#include "Vec.h"
-#include "Str.h"
+#include "regex.h"
 
 #define L_STAR  '*'
 #define L_CHAR  '.'
-#define L_QUOTE '\\'
+#define L_QUOTE '\''
 #define L_DGT   'd'
 #define L_WS    's'
 #define L_WORD  'w'
@@ -15,9 +13,9 @@
 #define L_OM    '+'
 #define L_NOT   '!'
 
-typedef enum RegexCNT       RegexCNT;
-typedef enum RegexTT        RegexTT;
-typedef struct RegexToken   RegexToken;
+typedef enum    RegexCNT         RegexCNT;
+typedef enum    RegexTT          RegexTT;
+typedef struct  RegexToken       RegexToken;
 
 enum RegexCNT
 {

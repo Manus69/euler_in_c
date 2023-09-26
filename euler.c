@@ -68,10 +68,9 @@ static inline int _error(const byte * msg)
 
 static inline int _test()
 {
-    Bigu x = Bigu_from_cstr("3628800");
-    i64 k = Bigu_n_decimal_digits(x);
-    i64_dbg(k);
-    Bigu_del(& x);
+    RegexMatch m = Regex_match_cstr_pattern("xasxxsx", "'a' * 'x'");
+    i64_dbg(m.idx);
+    i64_dbg(m.len);
 
     return 0;
 }

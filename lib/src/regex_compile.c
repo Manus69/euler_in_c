@@ -1,4 +1,5 @@
 #include "regex_private.h"
+#include "regex.h"
 #include <string.h>
 #include <assert.h>
 
@@ -23,7 +24,7 @@ static inline RegexCNT _get_cnt(StrSlc * slc)
     if (x == L_ZO) return CNT_ZERO_OR_ONE;
     if (x == L_OM) return CNT_ONE_OR_MORE;
 
-    assert(0);
+    return CNT_ONE;
 }
 
 static inline RegexToken _void(StrSlc * slc)
@@ -93,27 +94,47 @@ static RegexToken _next(StrSlc * slc)
     return (RegexToken) {.type = TT_BRICK};
 }
 
-Vec Regex_compile_StrSlc(StrSlc slc)
+RegexParseResult Regex_compile_StrSlc(StrSlc slc)
 {
     Vec         tokens;
     RegexToken  token;
+    STATUS      status;
 
     tokens = Vec_new(RegexToken);
+    status = STATUS_OK;
+
     while (true)
     {
         if ((token = _next(& slc)).type == TT_VOID) break;
+        if (token.type == TT_BRICK)
+        {
+            status = STATUS_FUCKED;
+            break;
+        }
 
+        if (token.type == TT_STAR && Vec_len(tokens) && 
+        (deref(RegexToken) Vec_last(tokens)).type == TT_STAR) continue;
+
+        Vec_push(& tokens, token, RegexToken);
     }
 
-    return tokens;
+    if (Vec_len(tokens) == 0) status = STATUS_FUCKED;
+
+    return (RegexParseResult) {.tokens = tokens, .status = status};
 }
 
-Vec Regex_compile_cstr_len(const byte * cstr, i64 len)
+RegexParseResult Regex_compile_cstr_len(const byte * cstr, i64 len)
 {
-
+    return Regex_compile_StrSlc(StrSlc_from_cstr_len(cstr, len));
 }
 
-Vec Regex_compile_cstr(const byte * cstr)
+RegexParseResult Regex_compile_cstr(const byte * cstr)
 {
     return Regex_compile_cstr_len(cstr, strlen(cstr));
+}
+
+void RegexParseResult_del(RegexParseResult * rpr)
+{
+    Vec_del(& rpr->tokens);
+    to0(rpr, RegexParseResult);
 }

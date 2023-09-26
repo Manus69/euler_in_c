@@ -24,5 +24,6 @@
 #include "./src/Htbl.h"
 #include "./src/Set.h"
 #include "./src/to_Str.h"
+#include "./src/regex.h"
 
 #endif
