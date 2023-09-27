@@ -24,3 +24,13 @@ bool byte_is_ws(byte x)
 {
     return x == ' ' || x == '\n' || x == '\t';
 }
+
+byte byte_to_lower(byte x)
+{
+    return x + ('A' - 'a');
+}
+
+byte byte_to_lower_check(byte x)
+{
+    return byte_is_upper(x) ? byte_to_lower(x) : x;
+}

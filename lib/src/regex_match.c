@@ -1,8 +1,9 @@
 #include "regex.h"
 #include "regex_private.h"
 #include "cstr.h"
-#include <assert.h>
+#include "byte.h"
 #include <string.h>
+#include <stdio.h>
 
 typedef struct RegexState RegexState;
 
@@ -44,6 +45,11 @@ static inline bool _state_no_tokens(RegexState state)
     return _state_tokens_remainig(state) <= 0;
 }
 
+static inline bool _state_last_token(RegexState state)
+{
+    return _state_tokens_remainig(state) == 1;
+}
+
 static inline bool _state_match_found(RegexState state)
 {
     return _state_no_tokens(state) && _state_matching(state);
@@ -63,9 +69,47 @@ static inline RegexMatch RegexMatch_no_match(void)
     return RegexMatch_init(NO_IDX, NO_IDX);
 }
 
-static inline bool _no_match(RegexMatch match)
+static inline i64 _find_alpha(StrSlc * slc)
 {
-    return match.len == NO_IDX;
+    for (i64 k = 0; k < StrSlc_len(* slc); k ++)
+    {
+        if (byte_is_alpha(StrSlc_get_c(* slc, k))) return k;
+    }
+
+    return NO_IDX;
+} 
+
+static inline i64 _skip_to_ws_end(StrSlc * slc)
+{
+    i64 idx;
+
+    for (idx = 0; idx < StrSlc_len(* slc); k ++)
+    {
+        if (byte_is_ws(StrSlc_get(* slc, idx))) break;
+    }
+
+    StrSlc_shift(slc, idx);
+
+    return idx;
+}
+
+static RegexState _match_word(StrSlc slc, RegexState state)
+{
+    i64 idx;
+
+    if (! _state_matching(state))
+    {
+        if ((idx = _find_alpha(& slc)) == NO_IDX) return state;
+        state.match_idx = idx;
+        StrSlc_shift(& slc, idx);
+        idx = _skip_to_ws_end(& slc);
+
+        return _match(slc, _state_next(state, idx, 1));
+    }
+    if (! byte_is_alpha(StrSlc_get_c(slc))) return state;
+    idx = _skip_to_ws_end(& slc);
+
+    return _match(slc, _state_next(state, idx, 1));
 }
 
 static RegexState _match_str(StrSlc slc, RegexState state)
@@ -116,10 +160,7 @@ static RegexState _match(StrSlc slc, RegexState state)
     if (_state_no_tokens(state)) return state;
 
     token = _state_token(state);
-    if (token.type == TT_STAR)
-    {
-        return _match_star(slc, state);
-    }
+    if (token.type == TT_STAR) return _match_star(slc, state);
     if (token.type == TT_STR) return _match_str(slc, state);
 
     return state;
@@ -152,6 +193,11 @@ RegexMatch Regex_match_cstr(const byte * cstr, RegexParseResult rpr)
     return Regex_match_cstr_len(cstr, strlen(cstr), rpr);
 }
 
+RegexMatch Regex_match_Str(Str str, RegexParseResult rpr)
+{
+    return Regex_match_slice(Str_to_slice(str), rpr);
+}
+
 RegexMatch Regex_match_slice_pattern(StrSlc slc, const byte * pattern)
 {
     RegexParseResult    rpr;
@@ -172,4 +218,9 @@ RegexMatch Regex_match_cstr_pattern(const byte * restrict cstr, const byte * pat
 RegexMatch Regex_match_Str_pattern(Str str, const byte * pattern)
 {
     return Regex_match_slice_pattern(Str_to_slice(str), pattern);
+}
+
+void RegexMatch_dbg(RegexMatch match)
+{
+    printf("(%ld %ld) ", match.idx, match.len);
 }

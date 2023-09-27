@@ -1,6 +1,6 @@
 #include "euler.h"
 
-#define TXT_FILE "../txt.txt"
+#define TXT_FILE "txt.txt"
 
 void _i64_test(i64 n)
 {
@@ -174,4 +174,24 @@ void _sqrt_test()
         double x = math_sqrt(k);
         printf("%ld %f\n", k, x);
     }
+}
+
+void _Regex_test_0()
+{
+    RegexParseResult rpr = Regex_compile_cstr("'m'* ' '");
+    RegexMatch m = Regex_match_cstr("suck my dick AUTHOR", rpr);
+
+    RegexMatch_dbg(m);
+    RegexParseResult_del(& rpr);
+}
+
+void _Regex_test_1()
+{
+    Str str = io_read_file(TXT_FILE);
+    RegexParseResult rpr = Regex_compile_cstr("'AUT' * 'OR'");
+    RegexMatch m = Regex_match_Str(str, rpr);
+    RegexMatch_dbg(m);
+
+    RegexParseResult_del(& rpr);
+    Str_del(& str);
 }

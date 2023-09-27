@@ -68,9 +68,8 @@ static inline int _error(const byte * msg)
 
 static inline int _test()
 {
-    RegexMatch m = Regex_match_cstr_pattern("xasxxsx", "'a' * 'x'");
-    i64_dbg(m.idx);
-    i64_dbg(m.len);
+    _Regex_test_0();
+    // _Regex_test_1();
 
     return 0;
 }

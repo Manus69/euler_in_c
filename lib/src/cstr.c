@@ -1,6 +1,7 @@
 #include "def.h"
 #include "math.h"
 #include "hash_djb.h"
+#include "byte.h"
 #include <string.h>
 
 i64 cstr_cmp_len(const byte * lhs, i64 lhs_len, const byte * rhs, i64 rhs_len)
@@ -54,6 +55,21 @@ i64 cstr_find_c(const byte * cstr, byte x)
     return cstr_find_c_len(cstr, strlen(cstr), x);
 }
 
+i64 cstr_find_ws_len(const byte * cstr, i64 len)
+{
+    for (i64 k = 0; k < len; k ++)
+    {
+        if (byte_is_ws(cstr[k])) return k;
+    }
+
+    return NO_IDX;
+}
+
+i64 cstr_find_ws(const byte * cstr)
+{
+    return cstr_find_ws_len(cstr, strlen(cstr));
+}
+
 i64 cstr_find_cstr_len(const byte * haystack, i64 h_len, const byte * needle, i64 n_len)
 {
     for (i64 k = 0; k < h_len; k ++)
@@ -61,6 +77,22 @@ i64 cstr_find_cstr_len(const byte * haystack, i64 h_len, const byte * needle, i6
         for (i64 w = 0; w < n_len; w ++)
         {
             if (haystack[k + w] != needle[w]) break;
+            if (w + 1 == n_len) return k;
+        }
+    }
+
+    return NO_IDX;
+}
+
+i64 cstr_find_cstr_len_ci(const byte * haystack, i64 h_len, const byte * needle, i64 n_len)
+{
+    if (n_len > h_len) return NO_IDX;
+
+    for (i64 k = 0; k < h_len; k ++)
+    {
+        for (i64 w = 0; w < n_len; w ++)
+        {
+            if (byte_to_lower_check(haystack[k + w]) != byte_to_lower_check(needle[w])) break;
             if (w + 1 == n_len) return k;
         }
     }

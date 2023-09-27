@@ -109,12 +109,14 @@ i64 StrSlc_find_c(StrSlc slc, byte x)
     return cstr_find_c_len(slc.cstr, slc.len, x);
 }
 
+i64 StrSlc_find_ws(StrSlc slc)
+{
+    return cstr_find_ws_len(slc.cstr, slc.len);
+}
+
 i64 StrSlc_find_slice(StrSlc haystack, StrSlc needle)
 {
-    return cstr_find_cstr_len(  StrSlc_first(haystack), 
-                                StrSlc_len(haystack), 
-                                StrSlc_first(needle), 
-                                StrSlc_len(needle));
+    return cstr_find_cstr_len(haystack.cstr, haystack.len, needle.cstr, needle.len);
 }
 
 i64 StrSlc_find_cstr_len(StrSlc slc, const byte * cstr, i64 len)
@@ -125,6 +127,21 @@ i64 StrSlc_find_cstr_len(StrSlc slc, const byte * cstr, i64 len)
 i64 StrSlc_find_cstr(StrSlc slc, const byte * cstr)
 {
     return cstr_find_cstr_len(slc.cstr, slc.len, cstr, strlen(cstr));
+}
+
+i64 StrSlc_find_cstr_len_ci(StrSlc slc, const byte * cstr, i64 len)
+{
+    return cstr_find_cstr_len_ci(slc.cstr, slc.len, cstr, len);
+}
+
+i64 StrSlc_find_cstr_ci(StrSlc slc, const byte * cstr)
+{
+    return StrSlc_find_cstr_len_ci(slc, cstr, strlen(cstr));
+}
+
+i64 StrSlc_find_slice_ci(StrSlc haystack, StrSlc needle)
+{
+    return StrSlc_find_cstr_len_ci(haystack, needle.cstr, needle.len);
 }
 
 bool StrSlc_starts_with_c(StrSlc slc, byte x)
@@ -204,7 +221,21 @@ void StrSlc_trim_back_cstr(StrSlc * slc, const byte * cstr)
     StrSlc_trim_back_cstr_len(slc, cstr, strlen(cstr));
 }
 
-void StrSlc_trim_back_ws(StrSlc * slc)
+i64 StrSlc_trim_front_ws(StrSlc * slc)
+{
+    i64 k;
+
+    for (k = 0; k < slc->len; k ++)
+    {
+        if (! byte_is_ws(slc->cstr[k])) break;
+    }
+
+    StrSlc_shift(slc, k);
+
+    return k;
+}
+
+i64 StrSlc_trim_back_ws(StrSlc * slc)
 {
     i64 idx;
     i64 len;
@@ -217,6 +248,8 @@ void StrSlc_trim_back_ws(StrSlc * slc)
     }
 
     StrSlc_shrink(slc, len);
+
+    return len;
 }
 
 StrSlc StrSlc_split_next(StrSlc * slc, byte x)

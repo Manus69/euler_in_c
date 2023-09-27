@@ -23,8 +23,8 @@ struct Str
 };
 
 Putf_gen(StrSlc)
-Swapf_gen(StrSlc)
 Putf_gen(Str)
+Swapf_gen(StrSlc)
 Swapf_gen(Str)
 
 i64             StrSlc_cmp(StrSlc lhs, StrSlc rhs);
@@ -50,6 +50,10 @@ i64             StrSlc_find_cstr_len(StrSlc slc, const byte * cstr, i64 len);
 i64             StrSlc_find_cstr(StrSlc slc, const byte * cstr);
 i64             StrSlc_find_cstr_len(StrSlc slc, const byte * cstr, i64 len);
 i64             StrSlc_find_cstr(StrSlc slc, const byte * cstr);
+i64             StrSlc_find_cstr_len_ci(StrSlc slc, const byte * cstr, i64 len);
+i64             StrSlc_find_cstr_ci(StrSlc slc, const byte * cstr);
+i64             StrSlc_find_slice_ci(StrSlc haystack, StrSlc needle);
+i64             StrSlc_find_ws(StrSlc slc);
 bool            StrSlc_starts_with_slice(StrSlc lhs, StrSlc rhs);
 bool            StrSlc_starts_with_c(StrSlc slc, byte x);
 bool            StrSlc_starts_with_cstr_len(StrSlc slc, const byte * cstr, i64 len);
@@ -57,6 +61,8 @@ bool            StrSlc_starts_with_cstr(StrSlc slc, const byte * cstr);
 void            StrSlc_trim_front_one(StrSlc * slc, byte x);
 void            StrSlc_trim_front_cstr_len(StrSlc * slc, const byte * cstr, i64 len);
 void            StrSlc_trim_front_cstr(StrSlc * slc, const byte * cstr);
+i64             StrSlc_trim_front_ws(StrSlc * slc);
+i64             StrSlc_trim_back_ws(StrSlc * slc);
 bool            StrSlc_ends_with_c(StrSlc slc, byte x);
 bool            StrSlc_ends_with_cstr_len(StrSlc slc, const byte * cstr, i64 len);
 bool            StrSlc_ends_with_cstr(StrSlc slc, const byte * cstr);
