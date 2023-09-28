@@ -3,6 +3,7 @@
 #include "hash_djb.h"
 #include "byte.h"
 #include <string.h>
+#include <stdio.h>
 
 i64 cstr_cmp_len(const byte * lhs, i64 lhs_len, const byte * rhs, i64 rhs_len)
 {
@@ -98,6 +99,16 @@ i64 cstr_find_cstr_len_ci(const byte * haystack, i64 h_len, const byte * needle,
     }
 
     return NO_IDX;
+}
+
+i64 cstr_find_cstr(const byte * haystack, const byte * needle)
+{
+    return cstr_find_cstr_len(haystack, strlen(haystack), needle, strlen(needle));
+}
+
+i64 cstr_find_cstr_ci(const byte * haystack, const byte * needle)
+{
+    return cstr_find_cstr_len_ci(haystack, strlen(haystack), needle, strlen(needle));
 }
 
 void cstr_rev_len(byte * cstr, i64 len)

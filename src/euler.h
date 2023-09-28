@@ -19,5 +19,7 @@ void _Bigu_test();
 void _sqrt_test();
 void _Regex_test_0();
 void _Regex_test_1();
+void _Regex_test_2();
+void _Regex_test_3();
 
 #endif

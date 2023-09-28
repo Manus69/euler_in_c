@@ -170,10 +170,12 @@ bool StrSlc_starts_with_cstr_len(StrSlc slc, const byte * cstr, i64 len)
 {
     if (len > slc.len) return false;
 
-    while (* cstr ++ == * slc.cstr ++)
-        ;
+    for (i64 k = 0; k < len; k ++)
+    {
+        if (slc.cstr[k] != cstr[k]) return false;
+    }
 
-    return * cstr == '\0';
+    return true;
 }
 
 bool StrSlc_starts_with_cstr_len_ci(StrSlc slc, const byte * cstr, i64 len)

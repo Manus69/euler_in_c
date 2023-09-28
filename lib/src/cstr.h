@@ -13,6 +13,8 @@ i64     cstr_find_ws_len(const byte * cstr, i64 len);
 i64     cstr_find_ws(const byte * cstr);
 i64     cstr_find_cstr_len(const byte * haystack, i64 h_len, const byte * needle, i64 n_len);
 i64     cstr_find_cstr_len_ci(const byte * haystack, i64 h_len, const byte * needle, i64 n_len);
+i64     cstr_find_cstr(const byte * haystack, const byte * needle);
+i64     cstr_find_cstr_ci(const byte * haystack, const byte * needle);
 void    cstr_rev_len(byte * cstr, i64 len);
 void    cstr_rev(byte * cstr);
 void    cstr_sort_insert(byte * cstr, i64 len);

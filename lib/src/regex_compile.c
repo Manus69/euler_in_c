@@ -41,6 +41,13 @@ static inline RegexToken _star(StrSlc * slc)
     return (RegexToken) {.type = TT_STAR};
 }
 
+static inline RegexToken _nlt(StrSlc * slc)
+{
+    StrSlc_shift(slc, 1);
+
+    return (RegexToken) {.type = TT_NLT};
+}
+
 static inline RegexToken _get_token(StrSlc * slc, RegexTT type)
 {
     RegexCNT cnt;
@@ -107,6 +114,7 @@ static RegexToken _next(StrSlc * slc)
     if (x == L_WORD) return _word(slc);
     if (x == L_ALPH) return _alpha(slc);
     if (x == L_DGT) return _digit(slc);
+    if (x == L_NLT) return _nlt(slc);
     
     return (RegexToken) {.type = TT_BRICK};
 }

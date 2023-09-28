@@ -178,7 +178,7 @@ void _sqrt_test()
 
 void _Regex_test_0()
 {
-    RegexParseResult rpr = Regex_compile_cstr("'cock'");
+    RegexParseResult rpr = Regex_compile_cstr("'my' !");
     RegexMatch m = Regex_match_cstr("suck my dick AUTHOR of cock", rpr);
 
     RegexMatch_dbg(m);
@@ -188,10 +188,28 @@ void _Regex_test_0()
 void _Regex_test_1()
 {
     Str str = io_read_file(TXT_FILE);
-    RegexParseResult rpr = Regex_compile_cstr("'AUT' * 'OR'");
+    RegexParseResult rpr = Regex_compile_cstr("<gnu>");
     RegexMatch m = Regex_match_Str(str, rpr);
     RegexMatch_dbg(m);
 
     RegexParseResult_del(& rpr);
     Str_del(& str);
+}
+
+void _Regex_test_2()
+{
+    StrSlc slc = StrSlc_from_cstr("ass fuck assss !!! ASSS");
+    Vec vec = Regex_match_all_slices(slc, "<as> !");
+
+    Vec_map(vec, (F) StrSlc_dbgf);
+    Vec_del(& vec);
+}
+
+void _Regex_test_3()
+{
+    Str str = io_read_file(TXT_FILE);
+    Vec vec = Regex_match_all_slices(Str_to_slice(str), "<gnu> ! * '\n'");
+
+    Vec_map(vec, (F) StrSlc_dbgf);
+    Vec_del(& vec);
 }

@@ -15,7 +15,7 @@ flags := $(flags_dbg)
 
 all: $(target)
 
-$(obj) : $(header) $(headers)
+$(obj) : $(header) $(headers) $(wildcard $(src_dir)/*.c)
 
 $(obj_dir)/%.o : $(src_dir)/%.c
 	$(cc) $(flags) -c $< -o $@
