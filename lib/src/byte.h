@@ -13,5 +13,6 @@ bool byte_is_alpha(byte x);
 bool byte_is_ws(byte x);
 byte byte_to_lower(byte x);
 byte byte_to_lower_check(byte x);
+byte byte_matching_bracket(byte ob);
 
 #endif

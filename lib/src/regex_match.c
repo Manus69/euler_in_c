@@ -69,88 +69,78 @@ static inline RegexMatch RegexMatch_no_match(void)
     return RegexMatch_init(NO_IDX, NO_IDX);
 }
 
-static inline i64 _find_alpha(StrSlc * slc)
+static inline RegexState _match_str_one(StrSlc slc, RegexState state, bool (* f_start)(StrSlc, StrSlc))
 {
-    for (i64 k = 0; k < StrSlc_len(* slc); k ++)
+    StrSlc  strslc;
+    i64     len;
+
+    strslc = _state_token(state).slc;
+    len = StrSlc_len(strslc);
+
+    if (f_start(slc, strslc))
     {
-        if (byte_is_alpha(StrSlc_get_c(* slc, k))) return k;
+        return _match(StrSlc_shifted(slc, len), _state_next(state, len, 1));
     }
 
-    return NO_IDX;
-} 
-
-static inline i64 _skip_to_ws_end(StrSlc * slc)
-{
-    i64 idx;
-
-    for (idx = 0; idx < StrSlc_len(* slc); k ++)
-    {
-        if (byte_is_ws(StrSlc_get(* slc, idx))) break;
-    }
-
-    StrSlc_shift(slc, idx);
-
-    return idx;
+    return state;
 }
 
-static RegexState _match_word(StrSlc slc, RegexState state)
-{
-    i64 idx;
-
-    if (! _state_matching(state))
-    {
-        if ((idx = _find_alpha(& slc)) == NO_IDX) return state;
-        state.match_idx = idx;
-        StrSlc_shift(& slc, idx);
-        idx = _skip_to_ws_end(& slc);
-
-        return _match(slc, _state_next(state, idx, 1));
-    }
-    if (! byte_is_alpha(StrSlc_get_c(slc))) return state;
-    idx = _skip_to_ws_end(& slc);
-
-    return _match(slc, _state_next(state, idx, 1));
-}
-
-static RegexState _match_str(StrSlc slc, RegexState state)
-{
-    RegexToken  token;
-    i64         idx;
-    i64         len;
-
-    token = _state_token(state);
-    len = StrSlc_len(token.slc);
-
-    if (! _state_matching(state))
-    {
-        if ((idx = StrSlc_find_slice(slc, token.slc)) == NO_IDX) return state;
-        state.match_idx = idx;
-
-        return _match(StrSlc_slice_from(slc, idx), _state_next(state, len, 1));
-    }
-    if (! StrSlc_starts_with_slice(slc, token.slc)) return state;
-    
-    StrSlc_shift(& slc, len);
-    return _match(slc, _state_next(state, len, 1));
-}
-
-static RegexState _match_star(StrSlc slc, RegexState state)
+static inline RegexState _match_str_zo(StrSlc slc, RegexState state, bool (* f_start)(StrSlc, StrSlc))
 {
     RegexState next_state;
-
-    if (StrSlc_len(slc) == 0) return state;
-    if (! _state_matching(state))
-    {
-        return _match(slc, _state_next(state, 0, 1));
-    }
 
     next_state = _match(slc, _state_next(state, 0, 1));
     if (_state_match_found(next_state)) return next_state;
 
-    StrSlc_shift(& slc, 1);
-    state.match_len ++;
+    return _match_str_one(slc, state, f_start);
+}
 
-    return _match_star(slc, state);
+static inline RegexState _match_str_om(StrSlc slc, RegexState state, bool (* f_start)(StrSlc, StrSlc))
+{
+    RegexState  next_state;
+    StrSlc      strslc;
+    i64         len;
+
+    strslc = _state_token(state).slc;
+    len = StrSlc_len(strslc);
+
+    if (! f_start(slc, strslc)) return state;
+    StrSlc_shift(& slc, len);
+
+    next_state = _match(slc, _state_next(state, len, 1));
+    if (_state_match_found(next_state)) return next_state;
+
+    return _match_str_om(slc, _state_next(state, len, 0), f_start);
+}
+
+static inline RegexState _match_str_zero(StrSlc slc, RegexState state, bool (* f_start)(StrSlc, StrSlc))
+{
+    if (f_start(slc, _state_token(state).slc)) return state;
+
+    return _match(slc, _state_next(state, 0, 1));
+}
+
+static inline RegexState _match_str(StrSlc slc, RegexState state, bool (* f_start)(StrSlc, StrSlc))
+{
+    RegexToken token;
+
+    token = _state_token(state);
+    if (token.count == CNT_ONE) return _match_str_one(slc, state, f_start);
+    if (token.count == CNT_ZERO) return _match_str_zero(slc, state, f_start);
+    if (token.count == CNT_ZERO_OR_ONE) return _match_str_zo(slc, state, f_start);
+    if (token.count == CNT_ONE_OR_MORE) return _match_str_om(slc, state, f_start);
+
+    return state;
+}
+
+static inline RegexState _match_star(StrSlc slc, RegexState state)
+{
+    RegexState next_state;
+
+    next_state = _match(slc, _state_next(state, 0, 1));
+    if (_state_match_found(next_state)) return next_state;
+
+    return _match_star(StrSlc_shifted(slc, 1), _state_next(state, 1, 0));
 }
 
 static RegexState _match(StrSlc slc, RegexState state)
@@ -158,10 +148,11 @@ static RegexState _match(StrSlc slc, RegexState state)
     RegexToken token;
 
     if (_state_no_tokens(state)) return state;
-
     token = _state_token(state);
+
     if (token.type == TT_STAR) return _match_star(slc, state);
-    if (token.type == TT_STR) return _match_str(slc, state);
+    if (token.type == TT_STR) return _match_str(slc, state, StrSlc_starts_with_slice);
+    if (token.type == TT_STR_CI) return _match_str(slc, state, StrSlc_starts_with_slice_ci);
 
     return state;
 }

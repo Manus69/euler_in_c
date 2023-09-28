@@ -34,3 +34,15 @@ byte byte_to_lower_check(byte x)
 {
     return byte_is_upper(x) ? byte_to_lower(x) : x;
 }
+
+byte byte_matching_bracket(byte ob)
+{
+    if (ob == '(') return ')';
+    if (ob == '{') return '}';
+    if (ob == '[') return ']';
+    if (ob == '<') return '>';
+    if (ob == '\'') return '\'';
+    if (ob == '"') return '"';
+
+    return 0;
+}

@@ -1,5 +1,5 @@
 #include "regex_private.h"
-#include "regex.h"
+#include "byte.h"
 #include <string.h>
 #include <assert.h>
 
@@ -41,7 +41,7 @@ static inline RegexToken _star(StrSlc * slc)
     return (RegexToken) {.type = TT_STAR};
 }
 
-static inline RegexToken _char(StrSlc * slc)
+static inline RegexToken _get_token(StrSlc * slc, RegexTT type)
 {
     RegexCNT cnt;
 
@@ -49,33 +49,47 @@ static inline RegexToken _char(StrSlc * slc)
     _skip_ws(slc);
     cnt = _get_cnt(slc);
 
-    return (RegexToken) {.type = TT_CHAR, .count = cnt};
+    return (RegexToken) {.type = type, .count = cnt};
+}
+
+static inline RegexToken _char(StrSlc * slc)
+{
+    return _get_token(slc, TT_CHAR);
+}
+
+static inline RegexToken _alpha(StrSlc * slc)
+{
+    return _get_token(slc, TT_ALPHA);
 }
 
 static inline RegexToken _word(StrSlc * slc)
 {
-    RegexCNT cnt;
+    return _get_token(slc, TT_WORD);
+}
 
-    StrSlc_shift(slc, 1);
-    _skip_ws(slc);
-    cnt = _get_cnt(slc);
-
-    return (RegexToken) {.type = TT_WORD, .count = cnt};
+static inline RegexToken _digit(StrSlc * slc)
+{
+    return _get_token(slc, TT_DIGIT);
 }
 
 static inline RegexToken _str(StrSlc * slc)
 {
-    i64         len;
+    byte        ob;
     StrSlc      literal;
     RegexCNT    cnt;
+    RegexTT     type;
 
-    StrSlc_shift(slc, 1);
-    if ((len = StrSlc_find_c(* slc, L_QUOTE)) == NO_IDX) return (RegexToken) {.type = TT_BRICK};
-    literal = StrSlc_slice(* slc, 0, len);
-    StrSlc_shift(slc, len + 1);
+    ob = StrSlc_get_c(* slc, 0);
+    literal = StrSlc_in_brackets(* slc, ob, byte_matching_bracket(ob));
+
+    if (StrSlc_is_brick(literal)) return (RegexToken) {.type = TT_BRICK};
+    StrSlc_shift(slc, StrSlc_len(literal) + 2);
+    type = ob == L_STRL ? TT_STR : TT_STR_CI;
+
+    _skip_ws(slc);
     cnt = _get_cnt(slc);
 
-    return (RegexToken) {.type = TT_STR, .count = cnt, .slc = literal};
+    return (RegexToken) {.type = type, .count = cnt, .slc = literal};
 }
 
 static RegexToken _next(StrSlc * slc)
@@ -87,9 +101,12 @@ static RegexToken _next(StrSlc * slc)
 
     x = StrSlc_get_c(* slc, 0);
     if (x == L_STAR) return _star(slc);
+    if (x == L_STRL) return _str(slc);
+    if (x == L_CIL) return _str(slc);
     if (x == L_CHAR) return _char(slc);
-    if (x == L_QUOTE) return _str(slc);
     if (x == L_WORD) return _word(slc);
+    if (x == L_ALPH) return _alpha(slc);
+    if (x == L_DGT) return _digit(slc);
     
     return (RegexToken) {.type = TT_BRICK};
 }

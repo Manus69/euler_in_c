@@ -23,6 +23,16 @@ StrSlc StrSlc_from_cstr_len(const byte * cstr, i64 len)
     };
 }
 
+StrSlc StrSlc_brick(void)
+{
+    return StrSlc_from_cstr_len(NULL, NO_IDX);
+}
+
+bool StrSlc_is_brick(StrSlc slc)
+{
+    return slc.len == NO_IDX;
+}
+
 StrSlc StrSlc_from_cstr(const byte * cstr)
 {
     return StrSlc_from_cstr_len(cstr, strlen(cstr));
@@ -62,6 +72,13 @@ void StrSlc_shift(StrSlc * slc, i64 shift)
 void StrSlc_shrink(StrSlc * slc, i64 shrink)
 {
     slc->len -= shrink;
+}
+
+StrSlc StrSlc_shifted(StrSlc slc, i64 shift)
+{
+    StrSlc_shift(& slc, shift);
+
+    return slc;
 }
 
 StrSlc StrSlc_slice(StrSlc slc, i64 idx, i64 len)
@@ -159,9 +176,26 @@ bool StrSlc_starts_with_cstr_len(StrSlc slc, const byte * cstr, i64 len)
     return * cstr == '\0';
 }
 
+bool StrSlc_starts_with_cstr_len_ci(StrSlc slc, const byte * cstr, i64 len)
+{
+    if (len > slc.len) return false;
+
+    for (i64 k = 0; k < len; k ++)
+    {
+        if (byte_to_lower_check(cstr[k]) != byte_to_lower_check(slc.cstr[k])) return false;
+    }
+    
+    return true;
+}
+
 bool StrSlc_starts_with_slice(StrSlc lhs, StrSlc rhs)
 {
     return StrSlc_starts_with_cstr_len(lhs, rhs.cstr, rhs.len);
+}
+
+bool StrSlc_starts_with_slice_ci(StrSlc lhs, StrSlc rhs)
+{
+    return StrSlc_starts_with_cstr_len_ci(lhs, rhs.cstr, rhs.len);
 }
 
 bool StrSlc_starts_with_cstr(StrSlc slc, const byte * cstr)
@@ -279,9 +313,49 @@ Vec StrSlc_split(StrSlc slc, byte x)
     return vec;
 }
 
+static i64 _match_bracket(StrSlc slc, byte ob, byte cb)
+{
+    i64 ob_count;
+    i64 cb_count;
+
+    StrSlc_shift(& slc, 1);
+    ob_count = 1;
+    cb_count = 0;
+
+    for (i64 k = 0; k < slc.len; k ++)
+    {
+        cb_count += (slc.cstr[k] == cb);
+        if (ob_count == cb_count) return k;
+        ob_count += (slc.cstr[k] == ob);
+    }
+
+    return NO_IDX;
+}
+
+StrSlc StrSlc_in_brackets(StrSlc slc, byte ob, byte cb)
+{
+    i64 idx;
+
+    if (* slc.cstr != ob) return StrSlc_brick();
+    if ((idx = _match_bracket(slc, ob, cb)) == NO_IDX) return StrSlc_brick();
+
+    return StrSlc_slice(slc, 1, idx);
+}
+
+StrSlc StrSlc_in_brackets_any(StrSlc slc)
+{
+    byte ob;
+    byte cb;
+
+    ob = * slc.cstr;
+    if (! (cb = byte_matching_bracket(ob))) return StrSlc_brick();
+
+    return StrSlc_in_brackets(slc, ob, cb);
+}
+
 void StrSlc_dbg(StrSlc slc)
 {
-    printf("%.*s ", (int) StrSlc_len(slc), slc.cstr);
+    if (! StrSlc_is_brick(slc)) printf("%.*s ", (int) StrSlc_len(slc), slc.cstr);
 }
 
 void StrSlc_dbgf(const void * slc)

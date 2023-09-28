@@ -5,8 +5,12 @@
 
 #define L_STAR  '*'
 #define L_CHAR  '.'
-#define L_QUOTE '\''
+#define L_STRL  '\''
+#define L_STRR  L_STRL
+#define L_CIL   '<'
+#define L_CIR   '>'
 #define L_DGT   'd'
+#define L_ALPH  'a'
 #define L_WS    's'
 #define L_WORD  'w'
 #define L_ZO    '?'
@@ -36,6 +40,7 @@ enum RegexTT
     TT_SPACE,
     TT_WORD,
     TT_STR,
+    TT_STR_CI,
 };
 
 struct RegexToken

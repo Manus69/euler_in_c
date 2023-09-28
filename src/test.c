@@ -178,8 +178,8 @@ void _sqrt_test()
 
 void _Regex_test_0()
 {
-    RegexParseResult rpr = Regex_compile_cstr("'m'* ' '");
-    RegexMatch m = Regex_match_cstr("suck my dick AUTHOR", rpr);
+    RegexParseResult rpr = Regex_compile_cstr("'cock'");
+    RegexMatch m = Regex_match_cstr("suck my dick AUTHOR of cock", rpr);
 
     RegexMatch_dbg(m);
     RegexParseResult_del(& rpr);
