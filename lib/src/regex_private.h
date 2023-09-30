@@ -12,7 +12,8 @@
 #define L_DGT   'd'
 #define L_ALPH  'a'
 #define L_WS    's'
-#define L_NLT   't'
+#define L_NLT   '$'
+#define L_LSTRT '^'
 #define L_WORD  'w'
 #define L_ZO    '?'
 #define L_OM    '+'
@@ -40,6 +41,7 @@ enum RegexTT
     TT_DIGIT,
     TT_SPACE,
     TT_NLT,
+    TT_LSTRT,
     TT_WORD,
     TT_STR,
     TT_STR_CI,

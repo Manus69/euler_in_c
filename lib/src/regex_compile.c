@@ -27,56 +27,62 @@ static inline RegexCNT _get_cnt(StrSlc * slc)
     return CNT_ONE;
 }
 
-static inline RegexToken _void(StrSlc * slc)
+static inline RegexToken _get_token(StrSlc * slc, RegexTT type)
 {
     StrSlc_shift(slc, 1);
 
-    return (RegexToken) {.type = TT_VOID};
+    return (RegexToken) {.type = type};
+}
+
+static inline RegexToken _get_token_cnt(StrSlc * slc, RegexTT type)
+{
+    RegexToken  token;
+
+    token = _get_token(slc, type);
+    _skip_ws(slc);
+    token.count = _get_cnt(slc);
+
+    return token;
+}
+
+static inline RegexToken _void(StrSlc * slc)
+{
+    return _get_token(slc, TT_VOID);
 }
 
 static inline RegexToken _star(StrSlc * slc)
 {
-    StrSlc_shift(slc, 1);
-
-    return (RegexToken) {.type = TT_STAR};
+    return _get_token(slc, TT_STAR);
 }
 
 static inline RegexToken _nlt(StrSlc * slc)
 {
-    StrSlc_shift(slc, 1);
-
-    return (RegexToken) {.type = TT_NLT};
+    return _get_token(slc, TT_NLT);
 }
 
-static inline RegexToken _get_token(StrSlc * slc, RegexTT type)
+static inline RegexToken _lstart(StrSlc * slc)
 {
-    RegexCNT cnt;
-
-    StrSlc_shift(slc, 1);
-    _skip_ws(slc);
-    cnt = _get_cnt(slc);
-
-    return (RegexToken) {.type = type, .count = cnt};
+    return _get_token(slc, TT_LSTRT);
 }
 
 static inline RegexToken _char(StrSlc * slc)
 {
-    return _get_token(slc, TT_CHAR);
+    return _get_token_cnt(slc, TT_CHAR);
 }
 
 static inline RegexToken _alpha(StrSlc * slc)
 {
-    return _get_token(slc, TT_ALPHA);
+    return _get_token_cnt(slc, TT_ALPHA);
 }
 
 static inline RegexToken _word(StrSlc * slc)
 {
-    return _get_token(slc, TT_WORD);
+    return _get_token_cnt(slc, TT_WORD);
 }
 
 static inline RegexToken _digit(StrSlc * slc)
 {
-    return _get_token(slc, TT_DIGIT);
+    return _get_token_cnt(slc, TT_DIGIT);
 }
 
 static inline RegexToken _str(StrSlc * slc)
@@ -115,6 +121,7 @@ static RegexToken _next(StrSlc * slc)
     if (x == L_ALPH) return _alpha(slc);
     if (x == L_DGT) return _digit(slc);
     if (x == L_NLT) return _nlt(slc);
+    if (x == L_LSTRT) return _lstart(slc);
     
     return (RegexToken) {.type = TT_BRICK};
 }

@@ -70,8 +70,8 @@ static inline int _test()
 {
     // _Regex_test_0();
     // _Regex_test_1();
-    _Regex_test_2();
-    // _Regex_test_3();
+    // _Regex_test_2();
+    _Regex_test_3();
 
     return 0;
 }

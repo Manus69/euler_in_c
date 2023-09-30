@@ -53,6 +53,11 @@ const char * StrSlc_first(StrSlc slc)
     return slc.cstr;
 }
 
+char StrSlc_first_c(StrSlc slc)
+{
+    return * slc.cstr;
+}
+
 i64 StrSlc_len(StrSlc slc)
 {
     return slc.len;
@@ -136,6 +141,11 @@ i64 StrSlc_find_slice(StrSlc haystack, StrSlc needle)
     return cstr_find_cstr_len(haystack.cstr, haystack.len, needle.cstr, needle.len);
 }
 
+i64 StrSlc_find_slice_from(StrSlc haystack, i64 idx, StrSlc needle)
+{
+    return StrSlc_find_slice(StrSlc_slice_from(haystack, idx), needle);
+}
+
 i64 StrSlc_find_cstr_len(StrSlc slc, const byte * cstr, i64 len)
 {
     return cstr_find_cstr_len(slc.cstr, slc.len, cstr, len);
@@ -159,6 +169,11 @@ i64 StrSlc_find_cstr_ci(StrSlc slc, const byte * cstr)
 i64 StrSlc_find_slice_ci(StrSlc haystack, StrSlc needle)
 {
     return StrSlc_find_cstr_len_ci(haystack, needle.cstr, needle.len);
+}
+
+i64 StrSlc_find_slice_ci_from(StrSlc haystack, i64 idx, StrSlc needle)
+{
+    return StrSlc_find_slice_ci(StrSlc_slice_from(haystack, idx), needle);
 }
 
 bool StrSlc_starts_with_c(StrSlc slc, byte x)
