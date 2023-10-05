@@ -58,7 +58,11 @@ static const fptr call_table[N_PROBLEMS] =
     p_41, //this one's a bitch
     p_42,
     p_43, //wrong
-    p_44,
+    NULL,
+    p_45,
+    NULL,
+    NULL,
+    p_48,
 };
 
 static inline int _error(const byte * msg)
@@ -68,10 +72,10 @@ static inline int _error(const byte * msg)
 
 static inline int _test()
 {
-    // _Regex_test_0();
-    // _Regex_test_1();
-    // _Regex_test_2();
-    _Regex_test_3();
+    for (u64 x = 0; x < 1000; x ++)
+    {
+        printf("%zu %zu\n", x, math_sqrt_int(x));
+    }
 
     return 0;
 }

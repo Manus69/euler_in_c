@@ -1,20 +1,24 @@
 #include "euler.h"
 
-#define N 1000000
-
-static u64 numbers[N];
-
-static void _init(i64 n)
+static inline bool _is_pentagonal(u64 x)
 {
-    for (i64 k = 1; k < n; k ++)
-    {
-        numbers[k] = (k * (3 * k - 1)) / 2;
-    }
+    u64 rooted;
+    u64 root;
+
+    rooted = 1 + 24 * x;
+    root = math_sqrt_int(rooted);
+    if (root * root != rooted) return false;
+
+    return (1 + root) % 6 == 0;
+}
+
+static inline u64 _pentagonal(u64 n)
+{
+    return n * (3 * n - 1) / 2;
 }
 
 void p_44(void)
 {
-    _init(N);
+    
 
-    u64_dbg(numbers[8 - 1]);
 }

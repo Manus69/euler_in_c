@@ -1,6 +1,7 @@
 #include "euler.h"
 
-#define TXT_FILE "txt.txt"
+#define TXT_FILE        "txt.txt"
+#define SRC_TEST_FILE   "./lib/src/regex_match.c"
 
 void _i64_test(i64 n)
 {
@@ -176,41 +177,41 @@ void _sqrt_test()
     }
 }
 
-void _Regex_test_0()
-{
-    RegexParseResult rpr = Regex_compile_cstr("'dic' * 'ck'");
-    RegexMatch m = Regex_match_cstr("suck my dick AUTHOR of cock", rpr);
+// void _Regex_test_0()
+// {
+//     RegexParseResult rpr = Regex_compile_cstr("^ . + <1> * $");
+//     RegexMatch m = Regex_match_cstr("ass\n 1 \n x", rpr);
 
-    RegexMatch_dbg(m);
-    RegexParseResult_del(& rpr);
-}
+//     RegexMatch_dbg(m);
+//     RegexParseResult_del(& rpr);
+// }
 
-void _Regex_test_1()
-{
-    Str str = io_read_file(TXT_FILE);
-    RegexParseResult rpr = Regex_compile_cstr("<gnu>");
-    RegexMatch m = Regex_match_Str(str, rpr);
-    RegexMatch_dbg(m);
+// void _Regex_test_1()
+// {
+//     Str str = io_read_file(TXT_FILE);
+//     Vec vec = Regex_match_all_slices(Str_to_slice(str), "^ * <gnu> * $");
 
-    RegexParseResult_del(& rpr);
-    Str_del(& str);
-}
+//     Vec_map(vec, (F) StrSlc_dbgf);
 
-void _Regex_test_2()
-{
-    StrSlc slc = StrSlc_from_cstr("ass fuck assss !!! ASSS");
-    Vec vec = Regex_match_all_slices(slc, "<as> !");
+//     Vec_del(& vec);
+//     Str_del(& str);
+// }
 
-    Vec_map(vec, (F) StrSlc_dbgf);
-    Vec_del(& vec);
-}
+// void _Regex_test_2()
+// {
+//     StrSlc slc = StrSlc_from_cstr("int main()\n{\nreturn 0;\n}");
+//     Vec vec = Regex_match_all_slices(slc, "^ * ')'");
 
-void _Regex_test_3()
-{
-    Str str = io_read_file(TXT_FILE);
-    Vec vec = Regex_match_all_slices(Str_to_slice(str), "<gnu> * '\n'");
+//     Vec_map(vec, (F) StrSlc_dbgf);
+//     Vec_del(& vec);
+// }
 
-    Vec_map(vec, (F) StrSlc_dbgf);
-    Vec_del(& vec);
-    Str_del(& str);
-}
+// void _Regex_test_3()
+// {
+//     Str str = io_read_file(SRC_TEST_FILE);
+//     Vec vec = Regex_match_all_slices(Str_to_slice(str), "'static' ! * ')' $");
+
+//     Vec_map(vec, (F) StrSlc_dbgf);
+//     Vec_del(& vec);
+//     Str_del(& str);
+// }

@@ -35,7 +35,7 @@ u64     math_log2(u64 x);
 u64     math_log10(u64 x);
 u64     math_arith_prog_sum(u64 n);
 bool    math_is_nat(double x);
-double  quadratic_root_plus(double a, double b, double c);
+double  math_quad_root_plus(double a, double b, double c);
 u64     math_is_square(u64 x);
 u64     math_is_triangular(u64 n);
 u64     math_factorial(u64 n);
@@ -51,5 +51,6 @@ u64     math_prime_divisor_power(u64 x, u64 p);
 Vec     math_prime_divisor_pairs(u64 x);
 
 double  math_sqrt(double a);
+u64     math_sqrt_int(u64 n);
 
 #endif

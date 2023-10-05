@@ -35,6 +35,7 @@ RegexMatch          Regex_match_Str(Str str, RegexParseResult rpr);
 RegexMatch          Regex_match_slice_pattern(StrSlc slc, const byte * pattern);
 RegexMatch          Regex_match_cstr_pattern(const byte * restrict cstr, const byte * pattern);
 RegexMatch          Regex_match_Str_pattern(Str str, const byte * pattern);
+Vec                 Regex_match_all(StrSlc slc, const byte * pattern);
 Vec                 Regex_match_all_slices(StrSlc slc, const byte * pattern);
 
 #endif

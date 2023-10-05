@@ -218,7 +218,7 @@ u64 math_n_choose_k(u64 n, u64 k)
     return nk;
 }
 
-double quadratic_root_plus(double a, double b, double c)
+double math_quad_root_plus(double a, double b, double c)
 {
     double d;
 

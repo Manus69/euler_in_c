@@ -9,24 +9,18 @@ typedef struct RegexState RegexState;
 
 struct RegexState
 {
-    const Vec *     tokens;
-    const StrSlc *  slc;
-    i64             vec_idx;
-    i64             slc_idx;
-    i64             match_idx;
-    i64             match_len;
+    const Vec * tokens;
+    i64         vec_idx;
 };
 
-static inline RegexState _match(RegexState state);
+typedef i64 (* MatchF)(StrSlc, RegexState);
+typedef i64 (* FindF)(StrSlc, RegexState);
+
+static inline i64 _match(StrSlc slc, RegexState state);
 
 static inline RegexToken _state_token(RegexState state)
 {
     return deref(RegexToken) Vec_get(* state.tokens, state.vec_idx);
-}
-
-static inline bool _state_matching(RegexState state)
-{
-    return state.match_idx != NO_IDX;
 }
 
 static inline i64 _state_tokens_remainig(RegexState state)
@@ -39,40 +33,13 @@ static inline bool _state_no_tokens(RegexState state)
     return _state_tokens_remainig(state) <= 0;
 }
 
-static inline i64 _state_current_slc_len(RegexState state)
-{
-    return state.slc->len - state.slc_idx;
-}
-
-static inline bool _state_current_slc_empty(RegexState state)
-{
-    return _state_current_slc_len(state) == 0;
-}
-
 static inline bool _state_last_token(RegexState state)
 {
     return _state_tokens_remainig(state) == 1;
 }
 
-static inline bool _state_match_found(RegexState state)
+static inline RegexState _state_next(RegexState state,i64 vec_inc)
 {
-    return _state_no_tokens(state) && _state_matching(state);
-}
-
-static inline char _state_current_char(RegexState state)
-{
-    return StrSlc_get_c(* state.slc, state.slc_idx);
-}
-
-static inline StrSlc _state_current_slc(RegexState state)
-{
-    return StrSlc_slice_from(* state.slc, state.slc_idx);
-}
-
-static inline RegexState _state_next(RegexState state, i64 slc_inc, i64 m_inc, i64 vec_inc)
-{
-    state.slc_idx += slc_inc;
-    state.match_len += m_inc;
     state.vec_idx += vec_inc;
 
     return state;
@@ -92,212 +59,189 @@ static inline RegexMatch RegexMatch_no_match(void)
     return RegexMatch_init(NO_IDX, NO_IDX);
 }
 
-static inline RegexState _find_str_once
-(RegexState state, StrSlc needle, i64 (* findf)(StrSlc, i64, StrSlc))
+static inline i64 _match_next(StrSlc slc, RegexState state, i64 slc_inc, i64 vec_inc)
 {
-    i64 idx;
+    i64 match;
 
-    if ((idx = findf(_state_current_slc(state), state.slc_idx, needle)) == NO_IDX) return state;
+    state = _state_next(state, vec_inc);
+    slc = StrSlc_shifted(slc, slc_inc);
+    match = _match(slc, state);
 
-    state.match_idx = state.slc_idx + idx;
-    state = _state_next(state, idx + needle.len, needle.len, 1);
-
-    return _match(state); 
+    return match == NO_IDX ? NO_IDX : slc_inc + match;
 }
 
-static inline RegexState _match_str_once
-(RegexState state, i64 (* findf)(StrSlc, i64, StrSlc), bool (* startf)(StrSlc, StrSlc))
+static inline i64 _match_star(StrSlc slc, RegexState state)
 {
-    StrSlc needle;
+    i64 match;
 
-    needle = _state_token(state).slc;
-    if (! _state_matching(state)) return _find_str_once(state, needle, findf);
-    if (! startf(_state_current_slc(state), needle)) return state;
+    if (slc.len == 0) return 0;
+    if ((match = _match_next(slc, state, 0, 1)) != NO_IDX) return match;
+    if ((match = _match_star(StrSlc_shifted(slc, 1), state)) != NO_IDX) return 1 + match;
 
-    return _match(_state_next(state, needle.len, needle.len, 1));
+    return NO_IDX;
 }
 
-static inline RegexState _find_str_not
-(RegexState state, StrSlc needle, bool (* startf)(StrSlc, StrSlc))
+static inline i64 _find_star(StrSlc slc, RegexState state)
 {
-    StrSlc      current;
-    RegexState  next;
+    (void) slc;
+    (void) state;
 
-    while (true)
-    {
-        if ((current = _state_current_slc(state)).len == 0) return state;
-        if (! startf(current, needle))
-        {
-            next = state;
-            next.match_idx = state.slc_idx;
-            next = _match(_state_next(next, 0, 0, 1));
-
-            if (_state_match_found(next)) return next;
-        }
-
-        state.slc_idx ++;
-    }
+    return 0;
 }
 
-static inline RegexState _match_str_not
-(RegexState state, bool (* startf)(StrSlc, StrSlc))
-{
-    StrSlc needle;
-
-    needle = _state_current_slc(state);
-    if (! _state_matching(state)) return _find_str_not(state, needle, startf);
-    if (startf(_state_current_slc(state), needle)) return state;
-
-    return _match(_state_next(state, needle.len, needle.len, 1));
-}
-
-static inline RegexState _match_str
-(RegexState state, i64 (* findf)(StrSlc, i64, StrSlc), bool (* startf)(StrSlc, StrSlc))
+static inline i64 _match_str_once(StrSlc slc, RegexState state, bool (* startf)(StrSlc, StrSlc))
 {
     RegexToken token;
 
     token = _state_token(state);
-    if (token.count == CNT_ONE) return _match_str_once(state, findf, startf);
-    
-    return state;
+    if (! startf(slc, token.slc)) return NO_IDX;
+
+    return _match_next(slc, state, token.slc.len, 1);
 }
 
-static inline RegexState _find_nl(RegexState state)
-{
-    i64 idx;
-
-    if ((idx = StrSlc_find_c(_state_current_slc(state), '\n')) == NO_IDX) return state;
-    state.match_idx = state.slc_idx + idx;
-
-    return _match(_state_next(state, idx + 1, 1, 1));
-}
-
-static inline RegexState _match_nl(RegexState state)
-{
-    if (! _state_matching(state)) return _find_nl(state);
-    if (_state_current_char(state) != '\n') return state;
-
-    return _match(_state_next(state, 1, 1, 1));
-}
-
-static inline RegexState _find_end(RegexState state)
-{
-    state.match_idx = state.slc->len;
-
-    return _state_next(state, state.slc->len, 0, 1);
-}
-
-static inline RegexState _match_end(RegexState state)
-{
-    if (! _state_matching(state)) return _find_end(state);
-    if (_state_current_slc_empty(state)) return _state_next(state, 0, 0, 1);
-
-    return state;
-}
-
-static inline RegexState _find_nlt(RegexState state)
-{
-    RegexState next;
-
-    next = _find_nl(state);
-    if (_state_match_found(next)) return next;
-
-    return _find_end(state);
-}
-
-static inline RegexState _match_nlt(RegexState state)
-{
-    RegexState next;
-
-    if (! _state_matching(state)) return _find_nlt(state);
-    next = _match_nl(state);
-    if (_state_match_found(next)) return next;
-
-    return _match_end(state);
-}
-
-static inline RegexState _find_start(RegexState state)
-{
-    state.match_idx = 0;
-
-    return _match(_state_next(state, 0, 0, 1));
-}
-
-static inline RegexState _match_start(RegexState state)
-{
-    if (! _state_matching(state)) return _find_lstart(state);
-
-    return state;
-}
-
-static inline RegexState _find_lstart(RegexState state)
-{
-    i64 idx;
-
-    if ((idx = StrSlc_find_c(state.slc, '\n')) == NO_IDX) return state;
-
-    
-}
-
-static inline RegexState _match_lstart(RegexState state)
-{
-
-}
-
-static inline RegexState _find_star(RegexState state)
-{
-    if (_state_last_token(state))
-    {
-        state.match_idx = state.slc_idx;
-        return _state_next(state, state.slc->len, state.slc->len, 1);
-    }
-
-    return _match(_state_next(state, 0, 0, 1));
-}
-
-static inline RegexState _match_star(RegexState state)
-{
-    RegexState next;
-
-    if (! _state_matching(state)) return _find_star(state);
-    next = _match(_state_next(state, 0, 0, 1));
-    if (_state_match_found(next)) return next;
-
-    return _match_star(_state_next(state, 1, 1, 0));
-}
-
-static inline RegexState _match(RegexState state)
+static inline i64 _match_str_not(StrSlc slc, RegexState state, bool (* startf)(StrSlc, StrSlc))
 {
     RegexToken token;
 
-    if (_state_no_tokens(state)) return state;
+    token = _state_token(state);
+    if (startf(slc, token.slc)) return NO_IDX;
+
+    return _match_next(slc, state, 0, 1);
+}
+
+static inline i64 _match_strf(StrSlc slc, RegexState state, bool (* startf)(StrSlc, StrSlc))
+{
+    RegexToken token;
 
     token = _state_token(state);
-    if (token.type == TT_STAR) return _match_star(state);
-    if (token.type == TT_STR) return _match_str(state, StrSlc_find_slice_from, StrSlc_starts_with_slice);
-    if (token.type == TT_STR_CI) return _match_str(state, StrSlc_find_slice_ci_from, StrSlc_starts_with_slice_ci);
-    if (token.type == TT_NLT) return _match_nlt(state);
+    if (token.count == CNT_ONE) return _match_str_once(slc, state, startf);
+    if (token.count == CNT_ZERO) return _match_str_not(slc, state, startf);
 
-    return state;
+    return NO_IDX;
 }
 
-RegexMatch Regex_match_slice(StrSlc slc, RegexParseResult rpr)
+static inline i64 _match_str(StrSlc slc, RegexState state)
 {
-    RegexState state;
-
-    if (rpr.status == STATUS_FUCKED) return RegexMatch_no_match();
-    state = (RegexState)
-    {
-        .tokens = & rpr.tokens,
-        .slc = & slc,
-        .match_idx = NO_IDX,
-    };
-
-    state = _match(state);
-    return _state_match_found(state) ? 
-            RegexMatch_init(state.match_idx, state.match_len) : 
-            RegexMatch_no_match();
+    return _match_strf(slc, state, StrSlc_starts_with_slice);
 }
+
+static inline i64 _match_str_ci(StrSlc slc, RegexState state)
+{
+    return _match_strf(slc, state, StrSlc_starts_with_slice_ci);
+}
+
+static inline i64 _find_strf(StrSlc slc, RegexState state, i64 (* findf)(StrSlc, StrSlc))
+{
+    RegexToken  token;
+
+    token = _state_token(state);
+    if (token.count == CNT_ONE || token.count == CNT_ONE_OR_MORE)
+    {
+        return findf(slc, token.slc); 
+    }
+
+    return 0;
+}
+
+static inline i64 _find_str_ci(StrSlc slc, RegexState state)
+{
+    return _find_strf(slc, state, StrSlc_find_slice_ci);
+}
+
+static inline i64 _find_str(StrSlc slc, RegexState state)
+{
+    return _find_strf(slc, state, StrSlc_find_slice);
+}
+
+static inline i64 _match_end(StrSlc slc, RegexState state)
+{
+    (void) state;
+
+    return slc.len == 0 ? 0 : NO_IDX;
+}
+
+static inline i64 _match_char_once(StrSlc slc, RegexState state)
+{
+    if (slc.len == 0) return NO_IDX;
+
+    return _match_next(slc, state, 1, 1);
+}
+
+static inline i64 _match_char_zo(StrSlc slc, RegexState state)
+{
+    i64 match;
+
+    if ((match = _match_next(slc, state, 0, 1)) != NO_IDX) return match;
+
+    return _match_char_once(slc, state);     
+}
+
+static inline i64 _match_char_om(StrSlc slc, RegexState state)
+{
+    i64 match;
+
+    if (slc.len == 0) return NO_IDX;
+    if ((match = _match_char_once(slc, state)) != NO_IDX) return match;
+    if ((match = _match_char_om(StrSlc_shifted(slc, 1), state)) == NO_IDX) return NO_IDX;
+
+    return 1 + match;
+}
+
+static inline i64 _match_char(StrSlc slc, RegexState state)
+{
+    RegexToken token;
+
+    token = _state_token(state);
+    if (token.count == CNT_ONE) return _match_char_once(slc, state);
+    if (token.count == CNT_ZERO_OR_ONE) return _match_char_zo(slc, state);
+    if (token.count == CNT_ONE_OR_MORE) return _match_char_om(slc, state);
+
+    return NO_IDX;
+}
+
+static inline MatchF _get_matchf(RegexTT type)
+{
+    if (type == TT_STAR) return _match_star;
+    if (type == TT_STR) return _match_str;
+    if (type == TT_STR_CI) return _match_str_ci;
+    if (type == TT_END) return _match_end;
+    if (type == TT_CHAR) return _match_char;
+
+    return NULL;
+}
+
+static inline FindF _get_findf(RegexTT type)
+{
+    if (type == TT_STR) return _find_str;
+    if (type == TT_STR_CI) return _find_str_ci;
+
+    return _find_star;
+}
+
+static inline i64 _match(StrSlc slc, RegexState state)
+{
+    MatchF matchf;
+
+    if (_state_no_tokens(state)) return 0;
+    if ((matchf = _get_matchf(_state_token(state).type)) == NULL) return NO_IDX;
+
+    return matchf(slc, state);
+}
+
+//to do
+// RegexMatch Regex_match_slice(StrSlc slc, RegexParseResult rpr)
+// {
+//     RegexState state;
+
+//     if (rpr.status == STATUS_FUCKED) return RegexMatch_no_match();
+//     state = (RegexState)
+//     {
+//         .tokens = & rpr.tokens,
+//     };
+
+//     (void) state;
+//     return RegexMatch_no_match();
+// }
 
 RegexMatch Regex_match_cstr_len(const byte * cstr, i64 len, RegexParseResult rpr)
 {
@@ -336,26 +280,16 @@ RegexMatch Regex_match_Str_pattern(Str str, const byte * pattern)
     return Regex_match_slice_pattern(Str_to_slice(str), pattern);
 }
 
-Vec Regex_match_all_slices(StrSlc slc, const byte * pattern)
-{
-    Vec                 vec;
-    RegexMatch          match;
-    RegexParseResult    rpr;
+//to do
+// Vec Regex_match_all(StrSlc slc, const byte * pattern)
+// {
 
-    vec = Vec_new(RegexMatch);
-    if ((rpr = Regex_compile_cstr(pattern)).status == STATUS_FUCKED) return vec;
+// }
 
-    while (true)
-    {
-        if ((match = Regex_match_slice(slc, rpr)).idx == NO_IDX) break;
-        Vec_push(& vec, StrSlc_slice(slc, match.idx, match.len), StrSlc);
-        slc = StrSlc_slice_from(slc, match.idx + match.len);
-    }
+// Vec Regex_match_all_slices(StrSlc slc, const byte * pattern)
+// {
 
-    RegexParseResult_del(& rpr);
-
-    return vec;
-}
+// }
 
 void RegexMatch_dbg(RegexMatch match)
 {

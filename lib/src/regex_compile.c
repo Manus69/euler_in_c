@@ -57,12 +57,12 @@ static inline RegexToken _star(StrSlc * slc)
 
 static inline RegexToken _nlt(StrSlc * slc)
 {
-    return _get_token(slc, TT_NLT);
+    return _get_token(slc, TT_END);
 }
 
 static inline RegexToken _lstart(StrSlc * slc)
 {
-    return _get_token(slc, TT_LSTRT);
+    return _get_token(slc, TT_START);
 }
 
 static inline RegexToken _char(StrSlc * slc)
@@ -126,6 +126,21 @@ static RegexToken _next(StrSlc * slc)
     return (RegexToken) {.type = TT_BRICK};
 }
 
+static STATUS _check_tokens(Vec tokens)
+{
+    RegexToken token;
+
+    if (Vec_len(tokens) == 0) return STATUS_FUCKED;
+    if (Vec_len(tokens) == 1)
+    {
+        token = deref(RegexToken) Vec_first(tokens);
+        if (token.type == TT_START) return STATUS_FUCKED;
+        if (token.type == TT_END) return STATUS_FUCKED;
+    }
+
+    return STATUS_OK;
+} 
+
 RegexParseResult Regex_compile_StrSlc(StrSlc slc)
 {
     Vec         tokens;
@@ -138,20 +153,18 @@ RegexParseResult Regex_compile_StrSlc(StrSlc slc)
     while (true)
     {
         if ((token = _next(& slc)).type == TT_VOID) break;
-        if (token.type == TT_BRICK)
+        if (Vec_len(tokens))
         {
-            status = STATUS_FUCKED;
-            break;
+            if ((deref(RegexToken) Vec_last(tokens)).type == TT_STAR && (token.type == TT_STAR)) continue;
+            if ((deref(RegexToken) Vec_last(tokens)).type == TT_END) token.type = TT_BRICK;
+            if (token.type == TT_START) token.type = TT_BRICK;
         }
 
-        if (token.type == TT_STAR && Vec_len(tokens) && 
-        (deref(RegexToken) Vec_last(tokens)).type == TT_STAR) continue;
-
+        if (token.type == TT_BRICK) {status = STATUS_FUCKED; break;}
         Vec_push(& tokens, token, RegexToken);
     }
 
-    if (Vec_len(tokens) == 0) status = STATUS_FUCKED;
-
+    if (status == STATUS_OK) status = _check_tokens(tokens);
     return (RegexParseResult) {.tokens = tokens, .status = status};
 }
 
