@@ -77,10 +77,14 @@ static inline int _error(const byte * msg)
 
 static inline int _test()
 {
-    for (u64 x = 0; x < 1000; x ++)
-    {
-        printf("%zu %zu\n", x, math_sqrt_int(x));
-    }
+    Str s = io_read_file("txt.txt");
+    Vec v = Str_split_slices(s, '\n');
+    sort_quick(Vec_to_view(v), StrSlc);
+    Vec_map(v, (F) StrSlc_dbgf);
+    StrSlc_dbgf(Vec_last(v));
+
+    Vec_del(& v);
+    Str_del(& s);
 
     return 0;
 }
